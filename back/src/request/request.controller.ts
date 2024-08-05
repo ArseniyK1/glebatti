@@ -65,7 +65,6 @@ export class RequestController {
     return this.requestService.doneRequest(req, query);
   }
 
-  @Roles(Role.lawyer)
   @Get('/getProposedRequest')
   @ApiOperation({ summary: 'Получение всех предложенных заявок юристом' })
   getProposedRequest(@Request() req: any) {
@@ -87,7 +86,6 @@ export class RequestController {
   }
 
   @Get('fetchMyRequests')
-  @Roles(Role.lawyer)
   @ApiOperation({ summary: 'Получение всех активных заявок для юриста' })
   fetchMyRequests(@Request() req: any, @Query() query: GetAllRequestDto) {
     return this.requestService.fetchMyRequests(+req.user.userId, query);

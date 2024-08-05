@@ -54,7 +54,6 @@ export class UserController {
   }
 
   @Get()
-  @Roles(Role.operator)
   @ApiOperation({ summary: 'Показать всех пользователей (для админа)' })
   @ApiResponse({ type: [CreateUserDto] })
   async findAll() {

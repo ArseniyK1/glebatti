@@ -9,7 +9,10 @@ import { AppController } from './app.controller';
 // import { OrganizationModule } from './organization/organization.module';
 import { StatusModule } from './status/status.module';
 import { OrderModule } from './order/order.module';
-import { ProductModule } from './shop/product/product.module';
+import { ProductModule } from './product/product.module';
+import { ShopModule } from './shop/shop.module';
+import { ManufactureModule } from './manufacture/manufacture.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { ProductModule } from './shop/product/product.module';
     StatusModule,
     OrderModule,
     ProductModule,
+    ShopModule,
+    ManufactureModule,
+    CategoryModule,
   ],
   providers: [...databaseProviders],
   exports: [...databaseProviders],

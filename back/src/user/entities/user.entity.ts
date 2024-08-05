@@ -8,6 +8,9 @@ import {
 } from 'typeorm';
 // import { Request } from '../../request/entities/request.entity';
 import { Roles } from '../../roles/entities/roles.entity';
+import { Order } from '../../order/entities/order.entity';
+import { Shop } from '../../shop/entities/shop.entity';
+import { Manufacture } from '../../manufacture/entities/manufacture.entity';
 // import { Organization } from '../../organization/entities/organization.entity';
 
 @Entity({ name: 'user' })
@@ -33,12 +36,12 @@ export class User {
   @Column({ nullable: true })
   email: string;
 
-  // @ManyToOne(() => Organization, (organization) => organization.user)
-  // @JoinColumn({ name: 'organizationId' })
-  // organization: Organization;
-  //
-  // @OneToMany(() => Request, (request) => request.user)
-  // request: Request[];
+  @OneToMany(() => Order, (order) => order.user)
+  order: Order[];
+
+  @ManyToOne(() => Shop, (shop) => shop.user)
+  @JoinColumn()
+  shop: Shop;
 
   @ManyToOne(() => Roles, (roles) => roles.user)
   @JoinColumn({ name: 'roleId' })

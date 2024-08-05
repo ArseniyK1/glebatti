@@ -17,8 +17,7 @@ export const databaseProviders = [
         logging: true,
       });
       await dataSource.initialize();
-      await dataSource.synchronize();
-      //
+
       // for (const entity of dataSource.entityMetadatas) {
       //   if (
       //     entity.tableName !== 'roles' &&
