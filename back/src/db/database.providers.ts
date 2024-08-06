@@ -23,8 +23,10 @@ export const databaseProviders = [
       //     entity.tableName !== 'roles' &&
       //     entity.tableName !== 'user' &&
       //     entity.tableName !== 'users' &&
-      //     entity.tableName !== 'type_right' &&
-      //     entity.tableName !== 'typeRight'
+      //     entity.tableName !== 'category' &&
+      //     entity.tableName !== 'manufacture' &&
+      //     entity.tableName !== 'status' &&
+      //     entity.tableName !== 'shop'
       //   )
       //     await dataSource
       //       .createQueryRunner()

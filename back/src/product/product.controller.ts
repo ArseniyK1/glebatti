@@ -1,15 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Request,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Role, Roles } from '../roles/decorators/roles.decorator';
+import { ProductAddStorageDto } from './dto/product-add-storage.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  @Post('create')
+  @Roles(Role.admin)
+  async create(
+    @Request() req: any,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    return await this.productService.create(req.user, createProductDto);
+  }
+
+  @Post('add_storage')
+  @Roles(Role.seller)
+  async product_add_storage(
+    @Request() req: any,
+    @Body() dto: ProductAddStorageDto,
+  ) {
+    return await this.productService.product_add_storage(req.user, dto);
   }
 
   @Get()

@@ -16,6 +16,9 @@ export class Shop {
   id: number;
 
   @Column({ nullable: true })
+  name: string;
+
+  @Column({ nullable: true })
   address: string;
 
   @Column({ nullable: true })

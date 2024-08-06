@@ -7,6 +7,8 @@ export class Status {
   id: number;
   @Column({ type: 'text', nullable: true })
   value: string;
+  @Column({ type: 'text', nullable: true })
+  description: string;
 
   @OneToMany(() => Order, (order) => order.status)
   order: Order[];

@@ -1,20 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
+import { Role, Roles } from '../roles/decorators/roles.decorator';
+import { FindAllInStorageDto } from './dto/find-all-in-storage.dto';
 
 @Controller('shop')
 export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
+  @Roles(Role.admin)
   @Post()
-  create(@Body() createShopDto: CreateShopDto) {
-    return this.shopService.create(createShopDto);
+  createShop(@Body() createShopDto: CreateShopDto) {
+    return this.shopService.createShop(createShopDto);
   }
 
-  @Get()
-  findAll() {
-    return this.shopService.findAll();
+  @Roles(Role.seller, Role.admin)
+  @Get('/findAllProductInShop')
+  findAllProductInShop(@Query() query: FindAllInStorageDto) {
+    return this.shopService.findAllProductInShop(+query.shopId);
   }
 
   @Get(':id')
