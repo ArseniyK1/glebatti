@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
@@ -13,6 +14,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
 import { ProductAddStorageDto } from './dto/product-add-storage.dto';
+import { ProductListDto } from './dto/product-list.dto';
 
 @Controller('product')
 export class ProductController {
@@ -36,9 +38,9 @@ export class ProductController {
     return await this.productService.product_add_storage(req.user, dto);
   }
 
-  @Get()
-  findAll() {
-    return this.productService.findAll();
+  @Get('list')
+  findAll(@Query() query: ProductListDto) {
+    return this.productService.findAll(query);
   }
 
   @Get(':id')

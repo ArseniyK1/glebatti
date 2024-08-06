@@ -2,7 +2,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,9 +32,11 @@ export class Product {
   @JoinColumn()
   category: Category;
 
-  @ManyToMany(() => Shop, (shop) => shop.products)
-  shops: Shop[];
+  @ManyToOne(() => Shop, (shop) => shop.products)
+  @JoinColumn()
+  shops: Shop;
 
-  @ManyToMany(() => Order, (order) => order.products)
-  orders: Order[];
+  @ManyToOne(() => Order, (order) => order.products)
+  @JoinColumn()
+  orders: Order;
 }

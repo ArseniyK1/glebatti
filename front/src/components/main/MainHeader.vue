@@ -1,74 +1,46 @@
 <template>
-  <q-toolbar class="flex justify-between">
-    <div class="row">
-      <q-btn
-        class="burger-button q-mt-sm"
-        @click="toggleLeftDrawer"
-        aria-label="Menu"
-        color="primary"
-        dense="dense"
-        flat="flat"
-        icon="menu"
-        round="round"
-      ></q-btn>
-      <div class="col q-ml-sm">
-        <q-toolbar-title
-          class="q-pt-sm q-ml-sm text-h6 montserrat-medium gradient-logo text-bold"
-          @click="$router.push('/')"
-          style="cursor: pointer; max-width: 165px"
-          v-if="$q.screen.gt.xs"
-        >
-          <q-icon
-            :name="mdiCheckboxMarkedCircleAutoOutline"
-            class="color_icon"
-          ></q-icon>
-          Консалтинг
-        </q-toolbar-title>
-      </div>
+  <q-toolbar class="flex justify-between bg-dark text-white">
+    <div class="row items-center">
+      <q-toolbar-title
+        class="text-h6 montserrat-medium text-bold text-positive"
+        @click="$router.push('/')"
+        style="cursor: pointer"
+      >
+        <q-icon :name="mdiMusic" color="positive"></q-icon>
+        МузШоп
+      </q-toolbar-title>
     </div>
-    <div class="q-mx-md" style="flex: 1 1 200px; max-width: 600px">
-      <!--      <q-input-->
-      <!--        class="q-mx-md"-->
-      <!--        @blur="search = $route.query ? $route.query.search : ''"-->
-      <!--        dense="dense"-->
-      <!--        bg-color="white"-->
-      <!--        outlined="outlined"-->
-      <!--        placeholder="Поиск"-->
-      <!--        rounded="rounded"-->
-      <!--        shadow-text="  Для поиска нажмите Enter"-->
-      <!--        v-model="search"-->
-      <!--        ><template v-slot:prepend-->
-      <!--          ><transition-->
-      <!--            :duration="100"-->
-      <!--            appear="appear"-->
-      <!--            enter-active-class="animated fadeIn"-->
-      <!--            leave-active-class="animated fadeOut"-->
-      <!--            mode="out-in"-->
-      <!--            ><q-icon key="iconSearch" name="search" v-if="!search"></q-icon-->
-      <!--            ><q-icon-->
-      <!--              class="cursor-pointer"-->
-      <!--              @click.stop="clearSearch"-->
-      <!--              key="iconClear"-->
-      <!--              name="times"-->
-      <!--              v-else-->
-      <!--            ></q-icon></transition-->
-      <!--        ></template>-->
-      <!--      </q-input>-->
+    <div class="row items-center q-mr-lg">
+      <q-btn
+        v-for="({ title, route, icon }, index) in filteredMenu"
+        :key="index"
+        flat
+        @click="$router.push(route)"
+        :class="{
+          'text-accent': isActiveRoute(route),
+          'active-route': isActiveRoute(route),
+        }"
+      >
+        <q-icon :name="icon" class="q-mr-sm"></q-icon>
+        {{ title }}
+      </q-btn>
     </div>
     <div class="row items-center">
       <q-icon
         :name="mdiCartOutline"
-        class="q-mr-md cursor-pointer"
+        class="cursor-pointer q-mr-md"
+        :class="isActiveRouteCart"
         size="2rem"
-        @click="$router.push('/basket')"
-        ><q-tooltip>Корзина</q-tooltip></q-icon
+        @click="$router.push('/cart')"
       >
-      <q-btn class="q-mr-sm" flat="flat" round="round">
+        <q-tooltip>Корзина</q-tooltip>
+      </q-icon>
+      <q-btn class="q-mr-sm" flat round>
         <q-avatar class="avatar-button" style="background: #f06543">
           <q-icon name="person"></q-icon>
           <q-menu
             :offset="[22, 6]"
-            square="square"
+            square
             style="
               border-radius: 0 0 0px 10px;
               border: 1.5px solid #e0e0e0;
@@ -80,16 +52,15 @@
             transition-show="slide-down"
           >
             <q-list bordered separator style="max-width: 318px">
-              <q-item @click="goToProfile" clickable="clickable" v-ripple>
-                <q-item-section avatar="avatar">
+              <q-item @click="goToProfile" clickable v-ripple>
+                <q-item-section avatar>
                   <q-icon color="secondary" name="user"></q-icon>
                 </q-item-section>
                 <q-item-section>Открыть профиль</q-item-section>
               </q-item>
               <q-separator></q-separator>
-              <q-separator></q-separator>
-              <q-item @click="logout" clickable="clickable" v-ripple>
-                <q-item-section avatar="avatar">
+              <q-item @click="logout" clickable v-ripple>
+                <q-item-section avatar>
                   <q-icon
                     color="secondary"
                     name="fal fa-right-from-bracket"
@@ -106,88 +77,65 @@
     </div>
   </q-toolbar>
 </template>
+
 <script setup>
 import { useQuasar } from "quasar";
-import { mdiCartOutline } from "@mdi/js";
-import { computed, onMounted, ref, watch } from "vue";
+import {
+  mdiCartOutline,
+  mdiMusic,
+  mdiHome,
+  mdiListBoxOutline,
+  mdiStore,
+  mdiHomeCity,
+} from "@mdi/js";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import { useRouter } from "vue-router";
-// import { useAuthStore } from "src/stores/auth";
-import { mdiCheckboxMarkedCircleAutoOutline, mdiCheckOutline } from "@mdi/js";
+import { useAuthStore } from "stores/auth";
 
-const props = defineProps({
-  //Отображение меню на экране. В мобильной версии его можно скрыть
-  showMenu: {
-    type: Boolean,
-    default: true,
+const router = useRouter();
+const quasar = useQuasar();
+const authStore = useAuthStore();
+const filteredMenu = ref([]);
+const menu = [
+  { title: "Главная", route: "/", icon: mdiHome, show: true },
+  { title: "Каталог", route: "/products", icon: mdiListBoxOutline, show: true },
+  {
+    title: "Магазины",
+    route: "/shops",
+    icon: mdiStore,
+    show: true,
   },
-  //Отвечает за отображение расширенного меню. По дефолту в десктопной версии false, чтобы меню отображалось иконками
-  fullWidthMenu: {
-    type: Boolean,
-    default: false,
-  },
-});
+];
 
-const emits = defineEmits(["update:showMenu", "update:fullWidthMenu"]);
+const isActiveRoute = (route) => {
+  return router.currentRoute.value.path === route;
+};
 
-// const authStore = useAuthStore();
+const isActiveRouteCart = () => {
+  console.log(router.currentRoute.value.path === "/cart");
+  return router.currentRoute.value.path === "/cart"
+    ? '"border-bottom: 2px solid #ff4081; padding-bottom: 2px"'
+    : "";
+};
 
+const goToProfile = () => router.push("/profile");
 const logout = () => {
   localStorage.clear();
   router.push("/auth");
 };
 
-const quasar = useQuasar();
-const router = useRouter();
-
-const search = ref("");
-const isFilter = ref(false);
-const nameUser = ref("");
-const html = ref(document.documentElement);
-// const profile = authStore.getProfile;
-// const hasRoles = computed(() => !!profile.roles?.length);
-const isMobile = computed(() => quasar.screen.lt.md);
-const fullScreenIcon = computed(() =>
-  quasar.fullscreen.isActive ? "fal fa-compress" : "fal fa-expand"
-);
-
-const goToProfile = () => router.push("/profile");
-const toggleLeftDrawer = () => {
-  if (isMobile.value) {
-    emits("update:showMenu", !props.showMenu);
-    return;
-  }
-  emits("update:fullWidthMenu", !props.fullWidthMenu);
-};
-
-//doSearch и clearSearch необходимо будет написать при появлении первых таблиц
-const doSearch = () => {
-  const query = search.value ? { search: search.value } : {};
-  router.replace({ path: router.currentRoute.value.path, query });
-};
-
-const clearSearch = () => {
-  router.replace({ path: router.currentRoute.value.path, query: {} });
-  search.value = "";
-};
-
-watch(
-  () => isMobile.value,
-  (value) => {
-    if (value) {
-      emits("update:fullWidthMenu", false);
-      emits("update:showMenu", false);
-      return;
-    }
-    emits("update:showMenu", true);
-    emits("update:fullWidthMenu", false);
-  }
-);
-onMounted(async () => {
-  if (isMobile.value) {
-    emits("update:showMenu", false);
-    emits("update:fullWidthMenu", false);
-  }
-  search.value = router.currentRoute.value.query.search || "";
+onBeforeMount(() => {
+  filteredMenu.value = menu.filter((el) => !!el.show);
+});
+onUnmounted(() => {
+  filteredMenu.value = [];
 });
 </script>
 
@@ -198,9 +146,6 @@ onMounted(async () => {
   -webkit-text-fill-color: transparent;
   display: table;
 }
-.color_icon {
-  color: #fd7819;
-}
 .avatar-button {
   transition: ease-in 0.1s;
 }
@@ -208,12 +153,7 @@ onMounted(async () => {
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4);
   transition: ease-out 0.1s;
 }
-.burger-button {
-  height: 25px;
-  transition: linear 0.2s;
-}
-
-.red-border {
-  outline: 4px solid var(--q-primary);
+.active-route {
+  border-bottom: 2px solid #ff4081;
 }
 </style>

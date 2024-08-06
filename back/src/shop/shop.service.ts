@@ -3,40 +3,37 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { IsNull, Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
-import { ShopProduct } from './entities/shop_product.entity';
 
 @Injectable()
 export class ShopService {
   constructor(
     @Inject('SHOP_REPOSITORY')
     private shopRepository: Repository<Shop>,
-    @Inject('SHOP_PRODUCT_REPOSITORY')
-    private shopProductRepository: Repository<any>,
   ) {}
   async createShop(createShopDto: CreateShopDto) {
     return await this.shopRepository.save(createShopDto);
   }
 
   async findAllProductInShop(shopId: number) {
-    return await this.shopProductRepository.find({
-      where: {
-        shop: {
-          id: shopId,
-        },
-      },
-      relations: { product: true },
-    });
+    // return await this.shopProductRepository.find({
+    //   where: {
+    //     shop: {
+    //       id: shopId,
+    //     },
+    //   },
+    //   relations: { product: true },
+    // });
   }
 
   async findAllProductInStorage() {
-    return await this.shopProductRepository.find({
-      where: {
-        shop: {
-          id: IsNull(),
-        },
-      },
-      relations: { product: true },
-    });
+    // return await this.shopProductRepository.find({
+    //   where: {
+    //     shop: {
+    //       id: IsNull(),
+    //     },
+    //   },
+    //   relations: { product: true },
+    // });
   }
 
   async findOne(id: number) {

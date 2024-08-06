@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-  JoinTable,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
 import { User } from '../../user/entities/user.entity';
 import { Order } from '../../order/entities/order.entity';
@@ -30,8 +23,7 @@ export class Shop {
   @OneToMany(() => User, (user) => user.shop)
   user: User[];
 
-  @ManyToMany(() => Product, (product) => product.shops)
-  @JoinTable({ name: 'shop_product' })
+  @OneToMany(() => Product, (product) => product.shops)
   products: Product[];
 }
 //

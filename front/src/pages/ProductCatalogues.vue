@@ -1,122 +1,114 @@
 <template>
-  <q-page class="q-pa-sm">
-    <div>
-      <q-card class="no-border no-shadow bg-transparent">
-        <q-card-section class="q-pa-sm">
-          <q-input
-            rounded
-            v-model="search"
-            outlined
-            placeholder="Search Product"
-          >
-            <template v-slot:append>
-              <q-icon v-if="search === ''" name="search" />
-              <q-icon
-                v-else
-                name="clear"
-                class="cursor-pointer"
-                @click="search = ''"
-              />
-            </template>
-          </q-input>
-        </q-card-section>
-      </q-card>
+  <q-page class="q-pa-sm full-height" style="background: #303030">
+    <div class="row q-ma-sm q-gutter-sm">
+      <common-input
+        dense
+        label="Название товара "
+        v-model="name"
+        class="col-2"
+      />
+      <common-select
+        dense
+        label="Категория"
+        v-model="category"
+        class="col-2"
+        :options="categories"
+      />
+      <common-select
+        dense
+        label="Магазин"
+        v-model="brand"
+        class="col-2"
+        :options="brands"
+      />
     </div>
-    <div class="row q-col-gutter-sm">
-      <div
-        class="col-md-4 col-lg-4 col-sm-12 col-xs-12"
-        v-for="item in data"
-        v-bind:key="item.id"
-      >
-        <card-product :data="item"></card-product>
+    <div class="scroll-container q-mt-md">
+      <div class="row q-col-gutter-sm full-width">
+        <q-btn
+          v-if="authStore.isAdmin"
+          class="absolute-bottom-right z-max q-pa-md q-ma-md"
+          size="md"
+          :icon="mdiPlus"
+          label="Добавить товар"
+          rounded
+          dense
+          color="primary"
+          @click="dialog = !dialog"
+        />
+        <div
+          class="col-md-4 col-lg-4 col-sm-12 col-xs-12 q-gutter-lg-lg q-gutter-md-md q-gutter-sm-sm q-pa-sm"
+          v-for="item in data"
+          v-bind:key="item.id"
+        >
+          <card-product :data="item"></card-product>
+        </div>
       </div>
     </div>
   </q-page>
+  <common-dialog
+    v-model="dialog"
+    title="Добавление товара"
+    caption="Заполните поля и добавьте товар"
+    width="50vw"
+  >
+    <new-product-form />
+  </common-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useQuasar } from "quasar";
 import CardProduct from "components/cards/CardProduct.vue";
+import { useProductStore } from "stores/product";
+import CommonScrollArea from "components/common/CommonScrollArea.vue";
+import CommonSelect from "components/common/CommonSelect.vue";
+import CommonInput from "components/common/CommonInput.vue";
+import { mdiPlus } from "@mdi/js";
+import { useAuthStore } from "stores/auth";
+import CommonDialog from "components/common/CommonDialog.vue";
+import NewProductForm from "components/forms/NewProductForm.vue";
 
-const data = [
-  {
-    id: 1,
-    title: "Our Changing Planet",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    rating: 2,
-    amount: "$30",
-    img: new URL(
-      "../assets/products/c-d-x-PDX_a_82obo-unsplash.jpg",
-      import.meta.url
-    ),
-    chip: "Discount 90%",
-    chip_color: "grey-4",
-    chip_class: "text-blue absolute-top-right",
-  },
-  {
-    id: 2,
-    title: "Our Changing Planet",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    rating: 4,
-    amount: "$15",
-    img: new URL(
-      "../assets/products/frankie-valentine-VghbBAYqUJ0-unsplash.jpg",
-      import.meta.url
-    ),
-  },
-  {
-    id: 3,
-    title: "Our Changing Planet",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    rating: 1,
-    amount: "$50",
-    img: new URL(
-      "../assets/products/giorgio-trovato-K62u25Jk6vo-unsplash.jpg",
-      import.meta.url
-    ),
-    chip: "Sold Out",
-    chip_color: "grey-8",
-    chip_class: "text-white absolute-top-right",
-  },
-  {
-    id: 4,
-    title: "Our Changing Planet",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    rating: 5,
-    amount: "$70",
-    img: new URL(
-      "../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg",
-      import.meta.url
-    ),
-    chip: "Discount 50%",
-    chip_color: "grey-4",
-    chip_class: "text-blue absolute-top-right",
-  },
-  {
-    id: 5,
-    title: "Our Changing Planet",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    rating: 2,
-    amount: "$50",
-    img: new URL(
-      "../assets/products/john-fornander-m2WpKnlLcEc-unsplash .jpg",
-      import.meta.url
-    ),
-  },
-  {
-    id: 6,
-    title: "Our Changing Planet",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    rating: 4,
-    amount: "$30",
-    img: new URL(
-      "../assets/products/marek-szturc-0iIV1goIodE-unsplash.jpg",
-      import.meta.url
-    ),
-  },
-];
-
+const $q = useQuasar();
+const productStore = useProductStore();
+const authStore = useAuthStore();
+const dialog = ref(false);
 const search = ref("");
+const name = ref("");
+const category = ref(null);
+const model = ref("");
+const priceRange = ref(null);
+const brand = ref(null);
+const data = ref([]);
+const categories = ["Гитара", "Барабаны", "Клавиши", "Духовые", "Скрипка"];
+const brands = ["Yamaha", "Fender", "Gibson", "Roland", "Korg"];
+
+const isMobile = computed(() => $q.screen.width <= 600);
+const isTabletOrMobile = computed(() => $q.screen.width <= 1024);
+
+onMounted(async () => {
+  await productStore.list();
+  data.value = productStore.getProducts;
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.scroll-container {
+  max-height: calc(100vh - 140px); /* Устанавливаем высоту контейнера */
+  overflow-y: auto; /* Добавляем вертикальную прокрутку */
+}
+.fixed-bottom-right {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+}
+
+.filters {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.filters .q-item-section {
+  margin-bottom: 12px;
+}
+</style>

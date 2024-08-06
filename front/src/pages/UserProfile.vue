@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm">
+  <q-page class="q-pa-sm" style="background: #303030">
     <div class="row q-col-gutter-sm" style="height: 100%">
       <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="height: 100%">
         <q-card
