@@ -6,10 +6,10 @@
         :key="index"
         :to="route"
         clickable="clickable"
-        v-for="({ title, caption, route, icon }, index) in menu"
+        v-for="({ title, caption, route, icon }, index) in filteredMenu"
       >
         <q-item-section avatar="avatar">
-          <q-icon :name="icon"></q-icon>
+          <q-icon :name="icon" color="info"></q-icon>
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-white">{{ title }}</q-item-label>
@@ -43,16 +43,11 @@
   </div>
 </template>
 <script setup>
-import { computed } from "vue";
-// import { useAuthStore } from "stores/auth";
-import {
-  mdiHome,
-  mdiFileSign,
-  mdiAccountGroupOutline,
-  mdiHomeCity,
-} from "@mdi/js";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import { useAuthStore } from "stores/auth";
+import { mdiHome, mdiListBoxOutline, mdiStore, mdiHomeCity } from "@mdi/js";
 
-// const authStore = useAuthStore();
+const authStore = useAuthStore();
 
 const props = defineProps({
   isMobile: {
@@ -70,19 +65,22 @@ const menu = [
     title: "Главная",
     caption: "Главная страница",
     icon: mdiHome,
-    route: "/main/",
+    route: "/",
+    show: true,
   },
   {
-    title: "Юристы",
-    caption: "Страница с юристами",
-    icon: mdiAccountGroupOutline,
-    route: "/lawyers/",
+    title: "Каталог",
+    caption: "Страница каталога",
+    icon: mdiListBoxOutline,
+    route: "/products",
+    show: true,
   },
   {
-    title: "Заявки",
-    caption: "Страница с заявками",
-    icon: mdiFileSign,
-    route: "/requests/",
+    title: "Магазин",
+    caption: "Страница магазина",
+    icon: mdiStore,
+    route: "/shop",
+    show: authStore.isSeller,
   },
   {
     title: "Организации",
@@ -91,10 +89,18 @@ const menu = [
     route: "/organizations/",
   },
 ];
+const filteredMenu = ref([]);
 
 const logoutHandler = () => {
-  // authStore.logout();
+  authStore.logout();
 };
+
+onMounted(() => {
+  filteredMenu.value = menu.filter((el) => !!el.show);
+});
+onUnmounted(() => {
+  filteredMenu.value = [];
+});
 </script>
 
 <style>

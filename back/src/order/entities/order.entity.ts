@@ -3,9 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CreatedAt } from '@sequelize/core/types/decorators/legacy';
@@ -37,7 +36,6 @@ export class Order {
   @JoinColumn()
   shop: Shop;
 
-  @ManyToMany(() => Product, (product) => product.orders)
-  @JoinTable({ name: 'order_product' })
+  @OneToMany(() => Product, (product) => product.orders)
   products: Product[];
 }

@@ -67,6 +67,7 @@ export const useAuthStore = defineStore({
         const _data = { ...data };
         localStorage.setItem("user-role", _data.roleId.value);
         localStorage.setItem("user-profile", JSON.stringify(_data));
+        this.profile = JSON.stringify(_data);
         this.roles = _data.roleId.value;
         return _data;
       } catch (e) {
@@ -85,9 +86,7 @@ export const useAuthStore = defineStore({
       localStorage.removeItem("user-role");
       localStorage.removeItem("user-profile");
       localStorage.clear();
-      console.log(api.defaults.headers);
       delete api.defaults.headers.common["Authorization"];
-      console.log(api.defaults.headers);
       this.token = "";
       this.roles = "";
       this.profile = "";

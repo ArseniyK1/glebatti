@@ -3,7 +3,6 @@ import { User } from './user/entities/user.entity';
 import { Roles } from './roles/entities/roles.entity';
 import { Product } from './product/entities/product.entity';
 import { Shop } from './shop/entities/shop.entity';
-import { ShopProduct } from './shop/entities/shop_product.entity';
 // import { Request } from './request/entities/request.entity';
 // import { Organization } from './organization/entities/organization.entity';
 
@@ -28,12 +27,7 @@ export const providers = [
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Shop),
     inject: ['DATA_SOURCE'],
   },
-  {
-    provide: 'SHOP_PRODUCT_REPOSITORY', // Добавь новый провайдер для ShopProduct
-    useFactory: (dataSource: DataSource) =>
-      dataSource.getRepository(ShopProduct),
-    inject: ['DATA_SOURCE'],
-  },
+
   // {
   //   provide: 'REQUEST_REPOSITORY',
   //   useFactory: (dataSource: DataSource) => dataSource.getRepository(Request),
