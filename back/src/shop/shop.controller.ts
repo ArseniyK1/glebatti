@@ -12,7 +12,7 @@ import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
-import { FindAllInStorageDto } from './dto/find-all-in-storage.dto';
+import { FindAllInShopDto } from './dto/find-all-in-shop.dto';
 
 @Controller('shop')
 export class ShopController {
@@ -20,14 +20,19 @@ export class ShopController {
 
   @Roles(Role.admin)
   @Post()
-  createShop(@Body() createShopDto: CreateShopDto) {
-    return this.shopService.createShop(createShopDto);
+  async createShop(@Body() createShopDto: CreateShopDto) {
+    return await this.shopService.createShop(createShopDto);
+  }
+
+  @Get('/findAllProductInShop')
+  async findAllProductInShop(@Query() query: FindAllInShopDto) {
+    return await this.shopService.findAllProductInShop(+query.shopId);
   }
 
   @Roles(Role.seller, Role.admin)
-  @Get('/findAllProductInShop')
-  findAllProductInShop(@Query() query: FindAllInStorageDto) {
-    return this.shopService.findAllProductInShop(+query.shopId);
+  @Get('/findAllProductInStorage')
+  async findAllProductInStorage() {
+    return await this.shopService.findAllProductInStorage();
   }
 
   @Get(':id')

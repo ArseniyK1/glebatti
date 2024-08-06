@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class FindAllInStorageDto {
+export class FindAllInShopDto {
   @IsNotEmpty()
   @IsString()
   shopId: string;

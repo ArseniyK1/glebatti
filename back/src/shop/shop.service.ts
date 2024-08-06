@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
 import { ShopProduct } from './entities/shop_product.entity';
 
@@ -22,6 +22,17 @@ export class ShopService {
       where: {
         shop: {
           id: shopId,
+        },
+      },
+      relations: { product: true },
+    });
+  }
+
+  async findAllProductInStorage() {
+    return await this.shopProductRepository.find({
+      where: {
+        shop: {
+          id: IsNull(),
         },
       },
       relations: { product: true },
