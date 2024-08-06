@@ -1,5 +1,5 @@
 <template>
-  <q-card class="no-shadow" bordered>
+  <q-card class="bg-dark text-white">
     <q-img
       src="../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg"
       height="220px"
@@ -15,12 +15,13 @@
     <q-card-section>
       <q-btn
         fab
-        color="teal-7"
         :icon="mdiCartPlus"
         padding="sm"
-        class="absolute"
+        class="absolute bg-secondary"
         style="top: 0; right: 12px; transform: translateY(-50%)"
-      />
+      >
+        <q-tooltip>Добавить в корзину</q-tooltip>
+      </q-btn>
     </q-card-section>
 
     <q-card-section>
@@ -48,7 +49,7 @@
       <div class="col-12">
         <span class="text-h6">{{ localData.price }}₽</span>
         <span class="text-h6 float-right">
-          <q-btn label="Подробнее" rounded color="secondary" outline></q-btn>
+          <q-btn label="Подробнее" rounded color="accent" />
         </span>
       </div>
     </q-card-section>

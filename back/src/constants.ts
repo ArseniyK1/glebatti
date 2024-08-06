@@ -3,6 +3,7 @@ import { User } from './user/entities/user.entity';
 import { Roles } from './roles/entities/roles.entity';
 import { Product } from './product/entities/product.entity';
 import { Shop } from './shop/entities/shop.entity';
+import { Category } from './category/entities/category.entity';
 // import { Request } from './request/entities/request.entity';
 // import { Organization } from './organization/entities/organization.entity';
 
@@ -25,6 +26,11 @@ export const providers = [
   {
     provide: 'SHOP_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Shop),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'CATEGORY_REPOSITORY',
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Category),
     inject: ['DATA_SOURCE'],
   },
 

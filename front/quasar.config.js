@@ -88,7 +88,10 @@ module.exports = configure(function (/* ctx */) {
       config: {
         notify: true,
         loading: {
-          spinner: "QSpinnerIos",
+          spinner: "QSpinnerAudio",
+          color: "secondary",
+
+          // Добавить эту строку для отключения затемнения фона
         },
       },
 

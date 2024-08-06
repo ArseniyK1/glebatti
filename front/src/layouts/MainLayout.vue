@@ -1,34 +1,13 @@
 <template>
   <q-layout view="hHh lpR lFf">
     <q-header class="bg-dark text-white">
-      <main-header
-        v-model:fullWidthMenu="fullWidthMenu"
-        v-model:showMenu="showMenu"
-      />
+      <main-header />
     </q-header>
 
-    <q-drawer
-      :dense="!fullWidthMenu"
-      :elevated="fullWidthMenu"
-      :width="220"
-      :mini="!fullWidthMenu"
-      mini-to-overlay
-      overlay
-      persistent
-      v-model="showMenu"
-      value="false"
-    >
-      <main-menu :full="fullWidthMenu" :is-mobile="isMobile" />
-    </q-drawer>
-
-    <q-page-container class="as">
-      <div :style="isMobile ? '' : 'padding-left: 57px'">
+    <q-page-container>
+      <div class="container">
         <router-view v-slot="{ Component }">
-          <component
-            style="height: calc(100vh - 50px)"
-            class="bgDarkPage"
-            :is="Component"
-          ></component>
+          <component :is="Component" class="bgDarkPage"></component>
         </router-view>
       </div>
     </q-page-container>
@@ -40,7 +19,6 @@ import { computed, onMounted, ref } from "vue";
 import { Notify, useQuasar } from "quasar";
 // import { useAuthStore } from "stores/auth";
 import { useRouter } from "vue-router";
-import MainMenu from "components/main/MainMenu.vue";
 import MainHeader from "components/main/MainHeader.vue";
 
 // INJECTABLE

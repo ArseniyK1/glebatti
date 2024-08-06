@@ -9,6 +9,8 @@ const routes = [
         component: () => import("pages/ProductCatalogues.vue"),
       },
       { path: "profile", component: () => import("pages/UserProfile.vue") },
+      { path: "cart", component: () => import("pages/CartPage.vue") },
+      { path: "shops", component: () => import("pages/ShopsPage.vue") },
     ],
   },
   { path: "/auth", component: () => import("pages/AuthPage.vue") },

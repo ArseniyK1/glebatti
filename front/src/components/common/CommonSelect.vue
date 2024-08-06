@@ -2,12 +2,14 @@
   <q-select
     v-bind="selectProps"
     v-model="value"
-    rounded
     outlined
     bg-color="white"
+    rounded
+    label-color="dark"
     :dense="dense"
     :label="label"
     :options="options"
+    :option-label="optionLabel"
     :readonly="readonly"
     :disable="disable"
     @update:model-value="$emit('update:modelValue', $event)"
@@ -20,11 +22,10 @@
       <slot name="prepend"></slot>
     </template>
     <template v-slot:append>
-      <slot name="append"></slot>
       <q-icon
-        v-if="clearable && modelValue"
+        v-if="value?.length"
         @click="clear"
-        name="fal fa-times"
+        :name="mdiClose"
         size="xs"
         style="cursor: pointer"
       />
@@ -34,6 +35,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { mdiClose } from "@mdi/js";
 
 const props = defineProps({
   modelValue: {
@@ -64,10 +66,6 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  optionLabel: {
-    type: String,
-    default: "name",
-  },
   hideSelected: {
     type: Boolean,
     default: false,
@@ -93,6 +91,10 @@ const props = defineProps({
     default: false,
   },
   filterFn: {
+    type: Function,
+    default: null,
+  },
+  optionLabel: {
     type: Function,
     default: null,
   },
@@ -126,6 +128,6 @@ const selectProps = {
 };
 
 const clear = () => {
-  value.value = props.useInput ? "" : {};
+  value.value = "";
 };
 </script>

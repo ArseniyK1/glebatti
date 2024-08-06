@@ -1,5 +1,5 @@
 import { api } from "boot/axios";
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
 import { normaliseDate } from "src/helpers/format";
 import { rolesValue } from "src/constants";
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore({
     getRole: (state) => state.roles,
     isSeller: (state) => state.roles === rolesValue.seller,
     isUser: (state) => state.roles === rolesValue.user,
-    isAdmin: (state) => state.type === rolesValue.admin,
+    isAdmin: (state) => state.roles === rolesValue.admin,
     getIdUser: (state) => +JSON.parse(state.profile)?.id,
     getParseProfile: (state) => JSON.parse(state.profile),
   },
@@ -42,13 +42,13 @@ export const useAuthStore = defineStore({
         api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
         this.token = access_token;
 
-        this.router.push("/products");
         await this.loadProfile();
         !!!JSON.parse(localStorage.getItem("user-profile"))?.id &&
           Notify.create({
             message: "Вы авторизованы",
             type: "positive",
           });
+        this.router.push("/");
         return data;
       } catch (e) {
         Notify.create({
@@ -73,7 +73,7 @@ export const useAuthStore = defineStore({
       } catch (e) {
         Notify.create({
           type: "negative",
-          color: "secondary",
+          color: "negative",
           message: e?.message || "Ошибка загрузки профиля",
         });
         console.log(e);
@@ -124,7 +124,7 @@ export const useAuthStore = defineStore({
       } catch (e) {
         Notify.create({
           type: "negative",
-          color: "secondary",
+          color: "negative",
           message: e?.message || "Ошибка регистрации",
         });
         console.log(e);

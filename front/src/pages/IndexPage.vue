@@ -1,5 +1,5 @@
 <template>
-  <q-page class="bg-dark text-white full-height">
+  <q-page class="text-white full-height" style="background: #303030">
     <div class="q-pa-md">
       <div class="q-gutter-md">
         <!-- Primary Section -->

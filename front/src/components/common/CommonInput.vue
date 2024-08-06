@@ -1,25 +1,38 @@
 <template>
-  <q-input v-bind="inputProps" v-model="value">
+  <q-input
+    v-bind="inputProps"
+    v-model="value"
+    outlined
+    bg-color="white"
+    rounded
+    label-color="dark"
+    :dense="dense"
+    :label="label"
+    :readonly="readonly"
+    :disable="disable"
+  >
     <template v-slot:error>
       <slot name="error"></slot>
     </template>
     <template v-slot:append>
-      <slot name="append"></slot>
       <q-icon
-        v-if="clearable"
+        v-if="value?.length"
         :style="{ opacity: modelValue ? 1 : 0 }"
         @click="clear"
-        name="fal fa-times"
+        :name="mdiClose"
         size="xs"
         style="cursor: pointer; transition: linear 0.2s"
       />
+    </template>
+    <template v-slot:prepend>
+      <q-icon v-if="icon" :name="icon" size="xs" />
     </template>
   </q-input>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
-
+import { mdiClose } from "@mdi/js";
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -45,6 +58,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  disable: {
+    type: Boolean,
+    default: false,
+  },
   inputClass: {
     type: String,
     default: "",
@@ -64,6 +81,10 @@ const props = defineProps({
   step: {
     type: String,
     default: "any",
+  },
+  icon: {
+    type: String,
+    default: "",
   },
 });
 
