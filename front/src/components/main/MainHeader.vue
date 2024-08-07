@@ -36,25 +36,25 @@
         <q-tooltip>Корзина</q-tooltip>
       </q-icon>
       <q-btn class="q-mr-sm" flat round>
-        <q-avatar class="avatar-button" style="background: #f06543">
-          <q-icon name="person"></q-icon>
+        <q-avatar class="avatar-button bg-accent">
+          <q-icon name="person" color="dark"></q-icon>
           <q-menu
             :offset="[22, 6]"
             square
-            style="
-              border-radius: 0 0 0px 10px;
-              border: 1.5px solid #e0e0e0;
-              box-shadow: none;
-              z-index: 999;
-            "
+            style="border-radius: 0 0 0px 10px; box-shadow: none; z-index: 999"
             transition-duration="100"
             transition-hide="slide-up"
             transition-show="slide-down"
           >
-            <q-list bordered separator style="max-width: 318px">
+            <q-list
+              bordered
+              separator
+              class="text-white bg-dark"
+              style="max-width: 318px"
+            >
               <q-item @click="goToProfile" clickable v-ripple>
                 <q-item-section avatar>
-                  <q-icon color="secondary" name="user"></q-icon>
+                  <q-icon color="accent" name="user"></q-icon>
                 </q-item-section>
                 <q-item-section>Открыть профиль</q-item-section>
               </q-item>
