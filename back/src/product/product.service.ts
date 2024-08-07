@@ -13,18 +13,16 @@ export class ProductService {
     private productRepository: Repository<any>,
     private shopService: ShopService,
   ) {}
-  async create(user: any, dto: CreateProductDto) {
-    const existsProduct = await this.productRepository.exists({
-      where: { model: dto.model },
-    });
-    if (existsProduct) {
-      throw new BadRequestException('Такой продукт уже существует');
+  async create(dto: CreateProductDto, photo?: Express.Multer.File) {
+    if (photo) {
+      dto.photo = photo.filename; // сохраняем имя файла в БД
     }
 
     return await this.productRepository.save({
+      price: +dto.price,
+      category: +dto.categoryId,
+      manufacture: +dto.manufactureId,
       ...dto,
-      category: dto.categoryId,
-      manufacture: dto.manufactureId,
     });
   }
   async product_add_storage(user: any, dto: ProductAddStorageDto) {
@@ -49,10 +47,12 @@ export class ProductService {
       return await this.productRepository.find({
         where: [{ name: query.query }, { model: query.query }],
         relations: { category: true, manufacture: true },
+        order: { id: 'DESC' },
       });
     }
     return await this.productRepository.find({
       relations: { category: true, manufacture: true },
+      order: { id: 'DESC' },
     });
   }
 

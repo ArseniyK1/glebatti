@@ -1,7 +1,11 @@
 <template>
   <q-card class="bg-dark text-white">
     <q-img
-      src="../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg"
+      :src="
+        data.photo?.length
+          ? `http://localhost:7000/uploads/${data.photo}`
+          : '../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg'
+      "
       height="220px"
     >
       <!--      <q-chip-->
@@ -65,7 +69,6 @@ const props = defineProps({
     default: () => ({}),
   },
 });
-
 const localData = ref({ ...props.data });
 </script>
 

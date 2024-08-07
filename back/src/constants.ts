@@ -4,6 +4,7 @@ import { Roles } from './roles/entities/roles.entity';
 import { Product } from './product/entities/product.entity';
 import { Shop } from './shop/entities/shop.entity';
 import { Category } from './category/entities/category.entity';
+import { Manufacture } from './manufacture/entities/manufacture.entity';
 // import { Request } from './request/entities/request.entity';
 // import { Organization } from './organization/entities/organization.entity';
 
@@ -31,6 +32,12 @@ export const providers = [
   {
     provide: 'CATEGORY_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Category),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'MANUFACTURE_REPOSITORY',
+    useFactory: (dataSource: DataSource) =>
+      dataSource.getRepository(Manufacture),
     inject: ['DATA_SOURCE'],
   },
 

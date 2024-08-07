@@ -1,28 +1,23 @@
 import { api } from "boot/axios";
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
-import { normaliseDate } from "src/helpers/format";
-import { rolesValue } from "src/constants";
-import { useAuthStore } from "stores/auth";
 
-export const useProductStore = defineStore({
-  id: "product",
+export const useManufactureStore = defineStore({
+  id: "manufacture",
   state: () => ({
-    product_list: [],
-    one_product: {},
+    manufacture_list: [],
   }),
   getters: {
-    getProducts: (state) => state.product_list,
-    getOneProduct: (state) => state.one_product,
+    getManufactures: (state) => state.manufacture_list,
   },
   actions: {
     async list(query = "") {
       try {
         Loading.show({ message: "Загрузка..." });
-        const { data } = await api.get("api/product/list", {
+        const { data } = await api.get("api/manufacture/list", {
           params: { query },
         });
-        this.product_list = data;
+        this.manufacture_list = data;
 
         return data;
       } catch (e) {
@@ -30,7 +25,7 @@ export const useProductStore = defineStore({
           message:
             e?.response?.data?.message ||
             e?.message ||
-            "Ошибка получения товаров",
+            "Ошибка получения производителей",
           type: "negative",
           color: "negative",
         });
@@ -39,20 +34,15 @@ export const useProductStore = defineStore({
         Loading.hide();
       }
     },
-    async createProduct(formData) {
+    async createManufacture(name) {
       try {
         Loading.show({ message: "Загрузка..." });
-        const { data } = await api({
-          url: "api/product/create",
-          method: "post",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          data: formData,
+        const { data } = await api.post("api/manufacture/create", {
+          name,
         });
         await this.list("");
         Notify.create({
-          message: "Товар создан",
+          message: "Производитель создан",
           type: "positive",
           color: "positive",
         });
@@ -62,7 +52,7 @@ export const useProductStore = defineStore({
           message:
             e?.response?.data?.message ||
             e?.message ||
-            "Ошибка создания товара",
+            "Ошибка создания производителя",
           type: "negative",
           color: "negative",
         });
@@ -75,6 +65,6 @@ export const useProductStore = defineStore({
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useProductStore, import.meta.hot));
-  console.info(`🍍 HMR Update "${useProductStore().$id}" at ${new Date()}`);
+  import.meta.hot.accept(acceptHMRUpdate(useManufactureStore, import.meta.hot));
+  console.info(`🍍 HMR Update "${useManufactureStore().$id}" at ${new Date()}`);
 }

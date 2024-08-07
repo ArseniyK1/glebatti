@@ -1,15 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateManufactureDto } from './dto/create-manufacture.dto';
 import { UpdateManufactureDto } from './dto/update-manufacture.dto';
+import { ManufactureListDto } from './dto/manufacture-list.dto';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ManufactureService {
-  create(createManufactureDto: CreateManufactureDto) {
-    return 'This action adds a new manufacture';
+  constructor(
+    @Inject('MANUFACTURE_REPOSITORY')
+    private manufactureRepository: Repository<any>,
+  ) {}
+  async create(dto: CreateManufactureDto) {
+    return await this.manufactureRepository.save(dto);
   }
 
-  findAll() {
-    return `This action returns all manufacture`;
+  async findAll(query: ManufactureListDto) {
+    if (query?.query) {
+      return await this.manufactureRepository.find({
+        where: { name: query.query },
+      });
+    }
+    return await this.manufactureRepository.find();
   }
 
   findOne(id: number) {

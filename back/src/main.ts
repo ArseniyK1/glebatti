@@ -14,7 +14,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   const adapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
-  app.useStaticAssets('D:/development/VKR/server/uploads', {
+  app.useStaticAssets('D:/development/glebatti/back/uploads', {
     prefix: '/uploads/',
   });
 

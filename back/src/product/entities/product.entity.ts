@@ -24,6 +24,9 @@ export class Product {
   @Column({ nullable: true })
   price: number;
 
+  @Column({ nullable: true })
+  photo: string;
+
   @ManyToOne(() => Manufacture, (manufacture) => manufacture.product)
   @JoinColumn()
   manufacture: Manufacture;
