@@ -1,48 +1,32 @@
 <template>
   <q-page class="q-pa-sm full-height" style="background: #303030">
-    <div class="row q-ma-sm q-gutter-sm">
-      <common-input
-        dense
-        label="Название товара "
-        v-model="name"
-        class="col-2"
-      />
-      <common-select
-        dense
-        label="Категория"
-        v-model="category"
-        class="col-2"
-        :options="categories"
-      />
-      <common-select
-        dense
-        label="Магазин"
-        v-model="brand"
-        class="col-2"
-        :options="brands"
-      />
-    </div>
+    <product-filters />
     <div class="scroll-container q-mt-md">
-      <div class="row q-col-gutter-sm full-width">
-        <q-btn
-          v-if="authStore.isAdmin"
-          class="absolute-bottom-right z-max q-pa-md q-ma-md"
-          size="md"
-          :icon="mdiPlus"
-          label="Добавить товар"
-          rounded
-          dense
-          color="primary"
-          @click="dialog = !dialog"
-        />
+      <q-btn
+        v-if="authStore.isAdmin"
+        class="absolute-bottom-right z-max q-pa-md q-ma-md"
+        size="md"
+        :icon="mdiPlus"
+        label="Добавить товар"
+        rounded
+        dense
+        color="primary"
+        @click="dialog = !dialog"
+      />
+      <div v-if="data.length > 0" class="row q-col-gutter-sm full-width">
         <div
-          class="col-md-4 col-lg-4 col-sm-12 col-xs-12 q-gutter-lg-lg q-gutter-md-md q-gutter-sm-sm q-pa-sm"
+          class="col-md-3 col-lg-3 col-sm-12 col-xs-12 q-gutter-lg-lg q-gutter-md-md q-gutter-sm-sm q-pa-sm"
           v-for="item in data"
-          v-bind:key="item.id"
+          :key="item.id"
         >
-          <card-product :data="item"></card-product>
+          <card-product
+            :data="item"
+            @add-to-cart="() => addToCartHandler(item)"
+            :check-product-in-cart="cartStore.checkProductInCart(item.id)"
+          />
         </div>
       </div>
+      <div v-else class="text-white">Нет товаров(</div>
     </div>
   </q-page>
   <common-dialog
@@ -56,34 +40,41 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useQuasar } from "quasar";
 import CardProduct from "components/cards/CardProduct.vue";
 import { useProductStore } from "stores/product";
-import CommonScrollArea from "components/common/CommonScrollArea.vue";
-import CommonSelect from "components/common/CommonSelect.vue";
-import CommonInput from "components/common/CommonInput.vue";
 import { mdiPlus } from "@mdi/js";
 import { useAuthStore } from "stores/auth";
 import CommonDialog from "components/common/CommonDialog.vue";
 import NewProductForm from "components/forms/NewProductForm.vue";
+import { useCartStore } from "stores/cart";
+import ProductFilters from "components/forms/ProductFilters.vue";
 
 const $q = useQuasar();
 const productStore = useProductStore();
 const authStore = useAuthStore();
-const dialog = ref(false);
-const search = ref("");
-const name = ref("");
-const category = ref(null);
-const model = ref("");
-const priceRange = ref(null);
-const brand = ref(null);
-const data = ref([]);
-const categories = ["Гитара", "Барабаны", "Клавиши", "Духовые", "Скрипка"];
-const brands = ["Yamaha", "Fender", "Gibson", "Roland", "Korg"];
+const cartStore = useCartStore();
 
-const isMobile = computed(() => $q.screen.width <= 600);
-const isTabletOrMobile = computed(() => $q.screen.width <= 1024);
+const dialog = ref(false);
+
+const data = ref([]);
+
+const productInCart = computed(() => cartStore.checkProductInCart());
+
+const addToCartHandler = (product) => {
+  cartStore.addToCart(product);
+  $q.notify({
+    message: "Товар добавлен в корзину",
+    type: "positive",
+  });
+};
+
+watch(
+  () => productStore.product_list,
+  () => (data.value = productStore.getProducts),
+  { deep: true }
+);
 
 onMounted(async () => {
   await productStore.list();

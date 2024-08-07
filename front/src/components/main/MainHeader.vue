@@ -1,5 +1,5 @@
 <template>
-  <q-toolbar class="flex justify-between bg-dark text-white">
+  <q-toolbar class="flex justify-between bg-dark text-white background">
     <div class="row items-center">
       <q-toolbar-title
         class="text-h6 montserrat-medium text-bold text-positive"
@@ -33,7 +33,7 @@
         size="2rem"
         @click="$router.push('/cart')"
       >
-        <q-tooltip>Корзина</q-tooltip>
+        <q-badge color="red" floating rounded>{{ countProducts }}</q-badge>
       </q-icon>
       <q-btn class="q-mr-sm" flat round>
         <q-avatar class="avatar-button bg-accent">
@@ -70,6 +70,11 @@
                   <q-item-label>Выйти</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-item @click="toggleDarkMode" clickable v-ripple>
+                <q-item-section>
+                  <span>Сменить тему</span>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-menu>
         </q-avatar>
@@ -79,7 +84,7 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
+import { Dark, useQuasar } from "quasar";
 import {
   mdiCartOutline,
   mdiMusic,
@@ -98,10 +103,13 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "stores/auth";
+import { useCartStore } from "stores/cart";
 
 const router = useRouter();
 const quasar = useQuasar();
 const authStore = useAuthStore();
+const cartStore = useCartStore();
+
 const filteredMenu = ref([]);
 const menu = [
   { title: "Главная", route: "/", icon: mdiHome, show: true },
@@ -113,6 +121,8 @@ const menu = [
     show: true,
   },
 ];
+
+const countProducts = computed(() => cartStore.getCountProducts);
 
 const isActiveRoute = (route) => {
   return router.currentRoute.value.path === route;
@@ -129,6 +139,10 @@ const goToProfile = () => router.push("/profile");
 const logout = () => {
   localStorage.clear();
   router.push("/auth");
+};
+
+const toggleDarkMode = () => {
+  Dark.toggle();
 };
 
 onBeforeMount(() => {
@@ -155,5 +169,12 @@ onUnmounted(() => {
 }
 .active-route {
   border-bottom: 2px solid #ff4081;
+}
+
+.body--light .background {
+  background: white;
+}
+.body--dark .background {
+  background: #020317;
 }
 </style>

@@ -43,15 +43,23 @@ export class ProductService {
   }
 
   async findAll(query: ProductListDto) {
-    if (query.query?.length) {
-      return await this.productRepository.find({
-        where: [{ name: query.query }, { model: query.query }],
-        relations: { category: true, manufacture: true },
-        order: { id: 'DESC' },
-      });
-    }
+    // if (query.query?.length) {
+    //   return await this.productRepository.find({
+    //     where: [{ name: query.query }, { model: query.query }],
+    //     relations: { category: true, manufacture: true },
+    //     order: { id: 'DESC' },
+    //   });
+    // }
     return await this.productRepository.find({
-      relations: { category: true, manufacture: true },
+      where: [
+        query.categoryId ? { category: { id: +query.categoryId } } : {},
+        query.manufactureId
+          ? { manufacture: { id: +query.manufactureId } }
+          : {},
+        query.shopId ? { shops: { id: +query.shopId } } : {},
+        query.name ? { name: query.name } : {},
+      ],
+      relations: { category: true, manufacture: true, shops: true },
       order: { id: 'DESC' },
     });
   }

@@ -16,11 +16,11 @@ export const useProductStore = defineStore({
     getOneProduct: (state) => state.one_product,
   },
   actions: {
-    async list(query = "") {
+    async list(name = "", categoryId = "", manufactureId = "", shopId = "") {
       try {
         Loading.show({ message: "Загрузка..." });
         const { data } = await api.get("api/product/list", {
-          params: { query },
+          params: { name, categoryId, manufactureId, shopId },
         });
         this.product_list = data;
 

@@ -6,25 +6,31 @@
           ? `http://localhost:7000/uploads/${data.photo}`
           : '../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg'
       "
-      height="220px"
+      height="320px"
     >
-      <!--      <q-chip-->
-      <!--        v-if="localData.chip"-->
-      <!--        :class="localData.chip_class"-->
-      <!--        :color="localData.chip_color"-->
-      <!--        :label="localData.chip"-->
-      <!--      ></q-chip>-->
     </q-img>
 
     <q-card-section>
       <q-btn
         fab
-        :icon="mdiCartPlus"
+        :icon="
+          hover && checkProductInCart
+            ? mdiCartRemove
+            : checkProductInCart
+            ? mdiCartCheck
+            : mdiCartPlus
+        "
         padding="sm"
         class="absolute bg-secondary"
+        :class="checkProductInCart ? 'bg-positive' : 'bg-secondary'"
         style="top: 0; right: 12px; transform: translateY(-50%)"
+        @click="$emit('addToCart')"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
       >
-        <q-tooltip>Добавить в корзину</q-tooltip>
+        <q-tooltip>{{
+          checkProductInCart ? "Удалить из корзины" : "Добавить в корзину"
+        }}</q-tooltip>
       </q-btn>
     </q-card-section>
 
@@ -35,25 +41,12 @@
       <div class="text-subtitle1 text-justify q-mt-sm">
         Производитель - "{{ localData.manufacture?.name }}"
       </div>
-      <div>
-        <!--        <q-rating-->
-        <!--          v-model="localData.rating"-->
-        <!--          max="5"-->
-        <!--          size="1.5em"-->
-        <!--          color="yellow"-->
-        <!--          icon="star_border"-->
-        <!--          icon-selected="star"-->
-        <!--          icon-half="star_half"-->
-        <!--          readonly-->
-        <!--          no-dimming-->
-        <!--        />-->
-      </div>
     </q-card-section>
     <q-card-section>
       <div class="col-12">
         <span class="text-h6">{{ localData.price }}₽</span>
         <span class="text-h6 float-right">
-          <q-btn label="Подробнее" rounded color="accent" />
+          <q-btn label="Подробнее" rounded color="accent" @click="test" />
         </span>
       </div>
     </q-card-section>
@@ -62,14 +55,24 @@
 
 <script setup>
 import { ref } from "vue";
-import { mdiCartPlus } from "@mdi/js";
+import { mdiCartPlus, mdiCartCheck, mdiCartRemove } from "@mdi/js";
+import { Notify } from "quasar";
 const props = defineProps({
   data: {
     type: Object,
     default: () => ({}),
   },
+  checkProductInCart: {
+    type: Boolean,
+    default: false,
+  },
 });
+const emit = defineEmits(["addToCart"]);
 const localData = ref({ ...props.data });
+const hover = ref(false);
+const test = () => {
+  Notify.create("Тестовое уведомление");
+};
 </script>
 
 <style scoped></style>

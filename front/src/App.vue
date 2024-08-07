@@ -24,3 +24,5 @@ onBeforeMount(async () => {
   }
 });
 </script>
+
+<style></style>

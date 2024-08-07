@@ -1,9 +1,11 @@
 import { Notify } from "quasar";
 
 Notify.setDefaults({
-  timeout: 3500,
-  position: "bottom-right",
+  timeout: 3000,
+  position: "bottom",
   textColor: "white",
-  type: "info",
+  type: "positive",
+  progress: true,
+  color: "positive",
   actions: [{ icon: "close", color: "white" }],
 });
