@@ -1,19 +1,15 @@
 <template>
   <q-page padding class="stores-page" style="background: #303030; color: white">
     <div class="row q-gutter-sm justify-center">
-      <div class="col-5">
-        <category-table />
-      </div>
-      <div class="col-6">
-        <shop-table />
+      <div class="col-12">
+        <product-table />
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup>
-import CategoryTable from "components/tables/CategoryTable.vue";
-import ShopTable from "components/tables/ShopTable.vue";
+import ProductTable from "components/tables/ProductTable.vue";
 </script>
 
 <style scoped></style>

@@ -3,8 +3,7 @@
     <slot name="custom-top"></slot>
     <q-table
       :title="title"
-      class="standart-table relative-position"
-      style="background-color: #e6e6fa"
+      class="standart-table relative-position bg-dark text-white"
       :bordered="bordered"
       :columns="columns"
       :flat="flat"
@@ -14,13 +13,14 @@
       :virtual-scroll-sticky-size-start="28"
       :square="square"
       :dense="dense"
+      @row-click="onRowClick"
       :separator="separator"
       table-header-class="text-white"
       v-model:pagination="pagination"
       virtual-scroll
       @virtual-scroll="scrollHandler"
       ref="tableRef"
-      hide-bottom="hide-bottom"
+      hide-bottom
     >
       <div
         v-if="isLoading"
