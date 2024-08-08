@@ -70,11 +70,11 @@
                   <q-item-label>Выйти</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item @click="toggleDarkMode" clickable v-ripple>
-                <q-item-section>
-                  <span>Сменить тему</span>
-                </q-item-section>
-              </q-item>
+              <!--              <q-item @click="toggleDarkMode" clickable v-ripple>-->
+              <!--                <q-item-section>-->
+              <!--                  <span>Сменить тему</span>-->
+              <!--                </q-item-section>-->
+              <!--              </q-item>-->
             </q-list>
           </q-menu>
         </q-avatar>

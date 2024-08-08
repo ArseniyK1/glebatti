@@ -46,7 +46,12 @@
       <div class="col-12">
         <span class="text-h6">{{ localData.price }}₽</span>
         <span class="text-h6 float-right">
-          <q-btn label="Подробнее" rounded color="accent" @click="test" />
+          <q-btn
+            label="Подробнее"
+            rounded
+            color="accent"
+            @click="$emit('open')"
+          />
         </span>
       </div>
     </q-card-section>
@@ -56,7 +61,7 @@
 <script setup>
 import { ref } from "vue";
 import { mdiCartPlus, mdiCartCheck, mdiCartRemove } from "@mdi/js";
-import { Notify } from "quasar";
+import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   data: {
     type: Object,
@@ -67,12 +72,9 @@ const props = defineProps({
     default: false,
   },
 });
-const emit = defineEmits(["addToCart"]);
+const emit = defineEmits(["addToCart", "open"]);
 const localData = ref({ ...props.data });
 const hover = ref(false);
-const test = () => {
-  Notify.create("Тестовое уведомление");
-};
 </script>
 
 <style scoped></style>

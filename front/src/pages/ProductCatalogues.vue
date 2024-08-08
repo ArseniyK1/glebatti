@@ -2,18 +2,6 @@
   <q-page class="q-pa-sm full-height" style="background: #303030">
     <product-filters />
     <div class="scroll-container q-mt-md">
-      <q-btn
-        v-if="authStore.isAdmin"
-        class="absolute-bottom-right q-pa-md q-ma-md"
-        style="z-index: 2"
-        size="md"
-        :icon="mdiPlus"
-        label="Добавить товар"
-        rounded
-        dense
-        color="primary"
-        @click="dialog = !dialog"
-      />
       <div v-if="data.length > 0" class="row q-col-gutter-sm full-width">
         <div
           class="col-md-3 col-lg-3 col-sm-12 col-xs-12 q-gutter-lg-lg q-gutter-md-md q-gutter-sm-sm q-pa-sm"
@@ -22,6 +10,7 @@
         >
           <card-product
             :data="item"
+            @open="() => openProductInfo(item)"
             @add-to-cart="() => addToCartHandler(item)"
             :check-product-in-cart="cartStore.checkProductInCart(item.id)"
           />
@@ -32,10 +21,10 @@
   </q-page>
   <left-dialog
     :visible="dialog"
-    title="Добавление товара"
+    title="Информация о товаре"
     @close="dialog = false"
   >
-    <new-product-form />
+    <product-info-card :data="oneProductData" />
   </left-dialog>
 </template>
 
@@ -51,6 +40,7 @@ import NewProductForm from "components/forms/NewProductForm.vue";
 import { useCartStore } from "stores/cart";
 import ProductFilters from "components/forms/ProductFilters.vue";
 import LeftDialog from "components/common/LeftDialog.vue";
+import ProductInfoCard from "components/cards/ProductInfoCard.vue";
 
 const $q = useQuasar();
 const productStore = useProductStore();
@@ -59,6 +49,7 @@ const cartStore = useCartStore();
 
 const dialog = ref(false);
 const data = ref([]);
+const oneProductData = ref({});
 
 const addToCartHandler = (product) => {
   cartStore.addToCart(product);
@@ -66,6 +57,11 @@ const addToCartHandler = (product) => {
     message: "Товар добавлен в корзину",
     type: "positive",
   });
+};
+
+const openProductInfo = (product) => {
+  dialog.value = true;
+  oneProductData.value = product;
 };
 
 watch(
