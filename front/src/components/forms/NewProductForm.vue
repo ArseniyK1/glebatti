@@ -23,7 +23,7 @@
       v-model="productPhoto"
       label="Загрузите фото"
       outlined
-      bg-color="white"
+      style="background-color: #e6e6fa; border-radius: 1.3rem"
       rounded
       dense
       label-color="dark"
@@ -33,14 +33,16 @@
         <q-icon name="attach_file" />
       </template>
     </q-file>
-    <q-btn
-      align="center"
-      label="Создать"
-      type="submit"
-      class="col-1 q-pa-sm"
-      rounded
-      color="primary"
-    ></q-btn>
+    <div class="row full-width justify-end">
+      <q-btn
+        align="center"
+        label="Создать"
+        type="submit"
+        class="col-1 q-pa-sm q-mr-lg"
+        rounded
+        color="primary"
+      />
+    </div>
   </q-form>
 </template>
 

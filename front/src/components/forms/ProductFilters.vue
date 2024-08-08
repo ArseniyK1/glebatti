@@ -1,6 +1,12 @@
 <template>
   <div class="row q-ma-sm q-gutter-sm">
-    <common-input dense label="Название товара " v-model="name" class="col-2" />
+    <common-input
+      dense
+      label="Название товара "
+      v-model="name"
+      class="col-2"
+      :debounce="500"
+    />
     <common-select
       dense
       label="Категория"

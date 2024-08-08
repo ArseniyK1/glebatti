@@ -3,7 +3,7 @@
     v-bind="selectProps"
     v-model="value"
     outlined
-    color="transparent"
+    color="info"
     style="background-color: #e6e6fa; border-radius: 1.3rem"
     rounded
     transition-hide="fade"

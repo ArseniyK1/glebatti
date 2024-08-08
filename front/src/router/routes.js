@@ -2,8 +2,13 @@ const routes = [
   {
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
+    redirect: "/products",
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
+      {
+        path: "",
+        component: () => import("pages/IndexPage.vue"),
+        redirect: "/products",
+      },
       {
         path: "products",
         component: () => import("pages/ProductCatalogues.vue"),

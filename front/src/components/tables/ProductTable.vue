@@ -1,22 +1,13 @@
 <template>
-  <common-table :columns="productsColumn" :rows="products" title="Товары">
+  <common-table
+    :columns="productsColumn"
+    :rows="products"
+    title="Товары"
+    height="100%"
+  >
     <template v-slot:top-right>
       <common-drop-dawn label="Добавить" color="primary">
-        <div class="row" style="max-width: 400px">
-          <div class="col-12">
-            <common-input label="Название" v-model="productForm.name" dense />
-          </div>
-          <div class="col-12 flex items-center q-ml-sm q-mt-sm justify-end">
-            <q-btn
-              label="Добавить"
-              color="primary"
-              @click="createProduct"
-              dense
-              size="sm"
-              class="q-pa-xs"
-            />
-          </div>
-        </div>
+        <new-product-form />
       </common-drop-dawn>
     </template>
   </common-table>
@@ -27,6 +18,7 @@ import CommonDropDawn from "components/common/CommonDropDawn.vue";
 import CommonInput from "components/common/CommonInput.vue";
 import { computed, onMounted, ref } from "vue";
 import { useProductStore } from "stores/product";
+import NewProductForm from "components/forms/NewProductForm.vue";
 
 const productStore = useProductStore();
 

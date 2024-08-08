@@ -12,6 +12,7 @@
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="28"
       :square="square"
+      :style="'max-height:' + height"
       :dense="dense"
       @row-click="onRowClick"
       :separator="separator"
@@ -119,6 +120,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  height: {
+    type: String,
+    default: "360px",
+  },
 });
 
 const emit = defineEmits([
@@ -152,7 +157,6 @@ const onRowClick = (evt, row, index) => {
 <style scoped>
 .standart-table {
   position: relative;
-  height: 360px;
   font-size: 0.75rem;
 }
 

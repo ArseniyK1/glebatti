@@ -4,6 +4,7 @@
     v-model="value"
     outlined
     rounded
+    :debounce="debounce"
     color="transparent"
     style="background-color: #e6e6fa; border-radius: 1.3rem"
     label-color="dark"
@@ -86,6 +87,10 @@ const props = defineProps({
   icon: {
     type: String,
     default: "",
+  },
+  debounce: {
+    type: Number,
+    default: 0,
   },
 });
 

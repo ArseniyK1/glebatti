@@ -114,7 +114,6 @@ const cartStore = useCartStore();
 
 const filteredMenu = ref([]);
 const menu = [
-  { title: "Главная", route: "/", icon: mdiHome, show: true },
   { title: "Каталог", route: "/products", icon: mdiListBoxOutline, show: true },
   {
     title: "Магазины",

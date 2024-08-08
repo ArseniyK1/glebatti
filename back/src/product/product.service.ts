@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { ProductAddStorageDto } from './dto/product-add-storage.dto';
 import { ShopService } from '../shop/shop.service';
 import { ProductListDto } from './dto/product-list.dto';
@@ -57,7 +57,7 @@ export class ProductService {
           ? { manufacture: { id: +query.manufactureId } }
           : {},
         query.shopId ? { shops: { id: +query.shopId } } : {},
-        query.name ? { name: query.name } : {},
+        query.name ? { name: Like(`%${query.name}%`) } : {},
       ],
       relations: { category: true, manufacture: true, shops: true },
       order: { id: 'DESC' },
