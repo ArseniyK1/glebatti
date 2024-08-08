@@ -1,22 +1,21 @@
-import { api } from "boot/axios";
 import { acceptHMRUpdate, defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
+import { api } from "boot/axios";
 
-export const useCategoryStore = defineStore({
-  id: "category",
+export const useShopStore = defineStore({
+  id: "shop",
   state: () => ({
-    category_list: [],
+    shops: [],
   }),
   getters: {
-    getCategories: (state) => state.category_list,
+    getShops: (state) => state.shops,
   },
   actions: {
-    async list(query = "") {
+    async list() {
       try {
-        const { data } = await api.get("api/category/list", {
-          params: { query },
-        });
-        this.category_list = data;
+        Loading.show({ message: "Загрузка..." });
+        const { data } = await api.get("api/shop/list");
+        this.shops = data;
 
         return data;
       } catch (e) {
@@ -24,7 +23,7 @@ export const useCategoryStore = defineStore({
           message:
             e?.response?.data?.message ||
             e?.message ||
-            "Ошибка получения категорий",
+            "Ошибка получения магазинов",
           type: "negative",
           color: "negative",
         });
@@ -33,25 +32,23 @@ export const useCategoryStore = defineStore({
         Loading.hide();
       }
     },
-    async createCategory(name) {
+    async createShop(name, address, phonenumber) {
       try {
         Loading.show({ message: "Загрузка..." });
-        const { data } = await api.post("api/category/create", {
+        const { data } = await api.post("api/shop/create", {
           name,
+          address,
+          phonenumber,
         });
         await this.list();
-        Notify.create({
-          message: "Категория создана",
-          type: "positive",
-          color: "positive",
-        });
+
         return data;
       } catch (e) {
         Notify.create({
           message:
             e?.response?.data?.message ||
             e?.message ||
-            "Ошибка создания категории",
+            "Ошибка создания магазина",
           type: "negative",
           color: "negative",
         });
@@ -64,6 +61,6 @@ export const useCategoryStore = defineStore({
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useCategoryStore, import.meta.hot));
-  console.info(`🍍 HMR Update "${useCategoryStore().$id}" at ${new Date()}`);
+  import.meta.hot.accept(acceptHMRUpdate(useShopStore, import.meta.hot));
+  console.info(`🍍 HMR Update "${useShopStore().$id}" at ${new Date()}`);
 }

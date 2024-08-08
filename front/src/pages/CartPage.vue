@@ -1,100 +1,69 @@
-<!-- CartPage.vue -->
 <template>
   <q-page padding class="cart-page" style="background: #303030; color: white">
-    <q-card class="my-card no-shadow" style="background: #424242; color: white">
-      <q-card-section class="text-center">
-        <h1>Корзина</h1>
-        <q-list bordered class="cart-list">
-          <q-item v-for="item in cartItems" :key="item.id" class="cart-item">
-            <q-item-section avatar>
-              <q-img :src="item.image" class="item-img" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ item.name }}</q-item-label>
-              <q-item-label caption>{{ item.price }} ₽</q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn
-                dense
-                flat
-                color="negative"
-                @click="removeFromCart(item.id)"
-                >Удалить</q-btn
-              >
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-card-section>
-    </q-card>
-
-    <q-card
-      class="my-card no-shadow"
-      style="background: #424242; color: white; margin-top: 20px"
-    >
-      <q-card-section class="text-center">
-        <h1>Товары</h1>
-        <q-list bordered class="products-list">
-          <q-item
-            v-for="product in products"
-            :key="product.id"
-            class="product-item"
-          >
-            <q-item-section avatar>
-              <q-img :src="product.image" class="item-img" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ product.name }}</q-item-label>
-              <q-item-label caption>{{ product.price }} ₽</q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn dense flat color="primary" @click="addToCart(product)"
-                >Добавить в корзину</q-btn
-              >
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-card-section>
-    </q-card>
+    <div class="row justify-center full-width" style="height: 90vh">
+      <div class="col-12 col-md-12">
+        <q-card
+          class="my-card q-pa-md"
+          style="background: #424242; color: white; width: 100%; height: 100%"
+        >
+          <q-card-section class="text-center" v-if="products?.length">
+            <h5>Корзина</h5>
+          </q-card-section>
+          <q-card-section>
+            <div class="row q-col-gutter-md" v-if="products?.length">
+              <div class="col-6">
+                <q-list
+                  bordered
+                  separator
+                  class="cart-list"
+                  style="max-height: 650px; overflow-y: auto"
+                >
+                  <cart-product-card
+                    v-for="item in products"
+                    :key="item.id"
+                    :product="item"
+                    @quantity:increment="
+                      () => cartStore.incrementQuantity(item.id)
+                    "
+                    @quantity:decrement="
+                      () => cartStore.decrementQuantity(item.id)
+                    "
+                    @remove="() => cartStore.removeProduct(item.id)"
+                  />
+                </q-list>
+              </div>
+              <div class="col-6">
+                <div class="total-price">
+                  <h6>Итоговая стоимость:</h6>
+                  <p>{{ totalSum }} ₽</p>
+                </div>
+              </div>
+            </div>
+            <div class="text-h4 text-center" v-else>
+              В корзине пока ничего нет
+            </div>
+          </q-card-section>
+          <q-btn
+            color="primary"
+            class="absolute-bottom-right q-ma-md"
+            label="Оформить"
+            @click="checkout"
+          />
+        </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
 
-<script>
-export default {
-  name: "CartPage",
-  data() {
-    return {
-      cartItems: [],
-      products: [
-        {
-          id: 1,
-          name: "Электрогитара Fender Stratocaster",
-          price: 60000,
-          image: "https://example.com/stratocaster.jpg",
-        },
-        {
-          id: 2,
-          name: "Аккустическая гитара Yamaha F310",
-          price: 15000,
-          image: "https://example.com/yamaha-f310.jpg",
-        },
-        {
-          id: 3,
-          name: "Электронное пианино Casio PX-160",
-          price: 45000,
-          image: "https://example.com/casio-px160.jpg",
-        },
-      ],
-    };
-  },
-  methods: {
-    addToCart(product) {
-      this.cartItems.push(product);
-    },
-    removeFromCart(productId) {
-      this.cartItems = this.cartItems.filter((item) => item.id !== productId);
-    },
-  },
-};
+<script setup>
+import { useCartStore } from "stores/cart";
+import { computed, onMounted, ref } from "vue";
+import CartProductCard from "components/cards/CartProductCard.vue";
+
+const cartStore = useCartStore();
+
+const products = computed(() => cartStore.getProducts);
+const totalSum = computed(() => cartStore.getTotalPrice);
 </script>
 
 <style scoped>
@@ -106,25 +75,29 @@ export default {
 }
 
 .my-card {
-  max-width: 800px;
-  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .item-img {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 5px;
 }
 
-.cart-item,
-.product-item {
+.cart-item {
   display: flex;
   align-items: center;
 }
 
-.cart-list,
-.products-list {
+.cart-list {
   width: 100%;
+  border: none;
+}
+
+.total-price {
+  text-align: center;
+  margin-bottom: 20px;
 }
 </style>

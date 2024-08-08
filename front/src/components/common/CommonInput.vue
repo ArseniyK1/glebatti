@@ -3,8 +3,9 @@
     v-bind="inputProps"
     v-model="value"
     outlined
-    bg-color="white"
     rounded
+    color="transparent"
+    style="background-color: #e6e6fa; border-radius: 1.3rem"
     label-color="dark"
     :dense="dense"
     :label="label"
@@ -16,7 +17,7 @@
     </template>
     <template v-slot:append>
       <q-icon
-        v-if="value?.length"
+        v-if="value"
         :style="{ opacity: modelValue ? 1 : 0 }"
         @click="clear"
         :name="mdiClose"

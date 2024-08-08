@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <q-page class="q-pa-sm full-height" style="background: #303030">
     <q-btn label="Open Dialog" color="primary" @click="openDialog" />
     <left-dialog
       :visible="dialogVisible"
@@ -8,7 +8,7 @@
     >
       <new-product-form />
     </left-dialog>
-  </div>
+  </q-page>
 </template>
 
 <script>

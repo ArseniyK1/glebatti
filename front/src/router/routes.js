@@ -11,6 +11,7 @@ const routes = [
       { path: "profile", component: () => import("pages/UserProfile.vue") },
       { path: "cart", component: () => import("pages/CartPage.vue") },
       { path: "shops", component: () => import("pages/ShopsPage.vue") },
+      { path: "admin-panel", component: () => import("pages/AdminPage.vue") },
     ],
   },
   { path: "/auth", component: () => import("pages/AuthPage.vue") },

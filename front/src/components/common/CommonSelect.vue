@@ -3,9 +3,14 @@
     v-bind="selectProps"
     v-model="value"
     outlined
-    bg-color="white"
+    color="transparent"
+    style="background-color: #e6e6fa; border-radius: 1.3rem"
     rounded
+    transition-hide="fade"
+    transition-duration="100"
+    transition-show="fade"
     label-color="dark"
+    popup-content-class="scroll commonSelect"
     :dense="dense"
     :label="label"
     :options="options"
@@ -23,7 +28,7 @@
     </template>
     <template v-slot:append>
       <q-icon
-        v-if="value?.length"
+        v-if="value"
         @click="clear"
         :name="mdiClose"
         size="xs"
@@ -131,3 +136,14 @@ const clear = () => {
   value.value = "";
 };
 </script>
+<style>
+.popup {
+  background: #303030;
+}
+.commonSelect {
+  background-color: #e6e6fa;
+  max-height: 250px;
+  border-radius: 15px;
+  box-shadow: 0px 9px 34px 5px rgba(34, 60, 80, 0.2) !important;
+}
+</style>

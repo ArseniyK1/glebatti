@@ -8,6 +8,7 @@
       position="right"
       full-height
       :persistent="persistent"
+      class="z-max"
     >
       <q-card class="my-dialog" :style="calcMyDialogWidth">
         <div class="title q-pa-md row items-center">
@@ -23,10 +24,7 @@
           />
         </div>
         <div class="split-line h-1"></div>
-        <div
-          class="scroll content flex-center"
-          style="height: 100%; border: 1px solid red"
-        >
+        <div class="scroll content">
           <slot></slot>
         </div>
         <div class="q-px-md q-pb-md">
@@ -37,8 +35,9 @@
             <div class="split-line h-1 q-my-md"></div>
             <q-btn
               label="Закрыть"
-              color="primary"
-              class="q-ml-md"
+              rounded
+              color="negative"
+              class="q-ma-md q-pa-md absolute-bottom-right"
               @click="handleClickCancel"
             />
           </div>

@@ -92,6 +92,8 @@ import {
   mdiListBoxOutline,
   mdiStore,
   mdiHomeCity,
+  mdiSecurity,
+  mdiWarehouse,
 } from "@mdi/js";
 import {
   computed,
@@ -119,6 +121,18 @@ const menu = [
     route: "/shops",
     icon: mdiStore,
     show: true,
+  },
+  {
+    title: "Склад",
+    route: "/storage",
+    icon: mdiWarehouse,
+    show: authStore.isAdmin,
+  },
+  {
+    title: "Админ",
+    route: "/admin-panel",
+    icon: mdiSecurity,
+    show: authStore.isAdmin,
   },
 ];
 

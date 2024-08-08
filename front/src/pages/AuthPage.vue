@@ -95,6 +95,6 @@ const handleSign = async () => {
 
 <style>
 .bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
+  background-image: linear-gradient(135deg, #7028e4 0%, #8f8f8f 100%);
 }
 </style>

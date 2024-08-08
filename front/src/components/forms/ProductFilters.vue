@@ -34,6 +34,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useCategoryStore } from "stores/category";
 import { useManufactureStore } from "stores/manufacture";
 import { useProductStore } from "stores/product";
+import { mdiShapePlusOutline } from "@mdi/js";
 
 const categoryStore = useCategoryStore();
 const manufactureStore = useManufactureStore();

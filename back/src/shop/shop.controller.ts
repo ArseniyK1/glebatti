@@ -19,7 +19,7 @@ export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
   @Roles(Role.admin)
-  @Post()
+  @Post('create')
   async createShop(@Body() createShopDto: CreateShopDto) {
     return await this.shopService.createShop(createShopDto);
   }
@@ -27,6 +27,11 @@ export class ShopController {
   @Get('/findAllProductInShop')
   async findAllProductInShop(@Query() query: FindAllInShopDto) {
     return await this.shopService.findAllProductInShop(+query.shopId);
+  }
+
+  @Get('/list')
+  async getAllShops() {
+    return await this.shopService.getAllShops();
   }
 
   @Roles(Role.seller, Role.admin)

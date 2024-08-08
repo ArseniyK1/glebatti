@@ -4,7 +4,8 @@
     <div class="scroll-container q-mt-md">
       <q-btn
         v-if="authStore.isAdmin"
-        class="absolute-bottom-right z-max q-pa-md q-ma-md"
+        class="absolute-bottom-right q-pa-md q-ma-md"
+        style="z-index: 2"
         size="md"
         :icon="mdiPlus"
         label="Добавить товар"
@@ -29,14 +30,13 @@
       <div v-else class="text-white">Нет товаров(</div>
     </div>
   </q-page>
-  <common-dialog
-    v-model="dialog"
+  <left-dialog
+    :visible="dialog"
     title="Добавление товара"
-    caption="Заполните поля и добавьте товар"
-    width="50vw"
+    @close="dialog = false"
   >
     <new-product-form />
-  </common-dialog>
+  </left-dialog>
 </template>
 
 <script setup>
@@ -50,6 +50,7 @@ import CommonDialog from "components/common/CommonDialog.vue";
 import NewProductForm from "components/forms/NewProductForm.vue";
 import { useCartStore } from "stores/cart";
 import ProductFilters from "components/forms/ProductFilters.vue";
+import LeftDialog from "components/common/LeftDialog.vue";
 
 const $q = useQuasar();
 const productStore = useProductStore();
@@ -57,10 +58,7 @@ const authStore = useAuthStore();
 const cartStore = useCartStore();
 
 const dialog = ref(false);
-
 const data = ref([]);
-
-const productInCart = computed(() => cartStore.checkProductInCart());
 
 const addToCartHandler = (product) => {
   cartStore.addToCart(product);

@@ -8,7 +8,7 @@ import { Shop } from './entities/shop.entity';
 export class ShopService {
   constructor(
     @Inject('SHOP_REPOSITORY')
-    private shopRepository: Repository<Shop>,
+    private shopRepository: Repository<any>,
   ) {}
   async createShop(createShopDto: CreateShopDto) {
     return await this.shopRepository.save(createShopDto);
@@ -38,6 +38,10 @@ export class ShopService {
 
   async findOne(id: number) {
     return await this.shopRepository.findOne({ where: { id } });
+  }
+
+  async getAllShops() {
+    return await this.shopRepository.find();
   }
 
   update(id: number, updateShopDto: UpdateShopDto) {
