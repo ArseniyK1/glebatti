@@ -13,6 +13,7 @@ import { ProductModule } from './product/product.module';
 import { ShopModule } from './shop/shop.module';
 import { ManufactureModule } from './manufacture/manufacture.module';
 import { CategoryModule } from './category/category.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CategoryModule } from './category/category.module';
     ShopModule,
     ManufactureModule,
     CategoryModule,
+    MailModule,
   ],
   providers: [...databaseProviders],
   exports: [...databaseProviders],

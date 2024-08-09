@@ -5,6 +5,7 @@ import { RolesModule } from '../roles/roles.module';
 import { providers } from '../constants';
 import { databaseProviders } from '../db/database.providers';
 import { MulterModule } from '@nestjs/platform-express';
+import { MailService } from '../mail/mail.service';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { MulterModule } from '@nestjs/platform-express';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, ...providers, ...databaseProviders],
+  providers: [UserService, ...providers, ...databaseProviders, MailService],
   exports: [UserService],
 })
 export class UserModule {}

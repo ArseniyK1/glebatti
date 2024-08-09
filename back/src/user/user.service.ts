@@ -17,6 +17,7 @@ import { roleEnum } from '../constants';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryLawyerDto } from './dto/QueryLawyer.dto';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,7 @@ export class UserService {
     private userRepository: Repository<any>,
     private roleService: RolesService,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     if (!!createUserDto.password && !!createUserDto.login) {
@@ -50,6 +52,7 @@ export class UserService {
           roleId: role.id,
           password: hashPassword,
         });
+        await this.sendRegistrationEmail(user.email, user.login);
         const payload = {
           userId: user.id,
           username: user.login,
@@ -65,26 +68,12 @@ export class UserService {
     }
   }
 
-  async createOperator(createUserDto: CreateUserDto) {
-    // if (!!createUserDto.password && !!createUserDto.login) {
-    //   const existsUser = await this.userRepository.findOne({
-    //     where: { login: createUserDto?.login },
-    //   });
-    //   if (existsUser?.id)
-    //     throw new ConflictException('Такой пользователь уже существует');
-    //   const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
-    //   const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
-    //
-    //   const role = await this.roleService.getRoleByValue(roleEnum.OPERATOR);
-    //
-    //   return await this.userRepository.save({
-    //     ...createUserDto,
-    //     roleId: role.id,
-    //     password: hashPassword,
-    //   });
-    // } else {
-    //   throw new BadRequestException('Укажите логин и(или) пароль');
-    // }
+  private async sendRegistrationEmail(email: string, login: string) {
+    const subject = 'Welcome to Our Service';
+    const text = `Dear ${login},\n\nThank you for registering with our service. We are excited to have you on board!\n\nBest regards,\nThe Team`;
+    const html = `<p>Dear ${login},</p><p>Thank you for registering with our service. We are excited to have you on board!</p><p>Best regards,<br>The Team</p>`;
+
+    await this.mailService.sendMail(email, subject, text, html);
   }
 
   async updateUserContent(userId: number, dto: UpdateUserDto) {

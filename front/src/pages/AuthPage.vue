@@ -69,7 +69,7 @@ import { useAuthStore } from "stores/auth";
 const authStore = useAuthStore();
 const username = ref("test");
 const password = ref("test");
-const email = ref("test@test.com");
+const email = ref("kiselev-ars02@yandex.ru");
 const isRegister = ref(false);
 const isSeller = ref(false);
 const showEmail = () => {
