@@ -39,6 +39,9 @@ export class User {
   @Column({ default: false })
   verified: boolean;
 
+  @Column({ nullable: true })
+  confirmation_code: number;
+
   @OneToMany(() => Order, (order) => order.user)
   order: Order[];
 

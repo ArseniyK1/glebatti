@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
-import { CodeCacheService } from '../cashe/cashe.service';
 import { Repository } from 'typeorm';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 
@@ -12,7 +11,6 @@ export class MailService {
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<any>,
-    private codeCacheService: CodeCacheService,
   ) {}
 
   private transporter = nodemailer.createTransport({
@@ -38,26 +36,15 @@ export class MailService {
   }
 
   async verificationCode(userId: number, dto: VerifyCodeDto) {
-    // console.log(
-    //   dto.email,
-    //   this.codeCacheService.getAll(),
-    //   this.codeCacheService.get(dto.email),
-    // );
-    // const emailCode = this.codeCacheService.get(dto.email);
-    // // console.log(emailCode, dto.code, userId);
-    // if (+emailCode !== +dto.code) return { verify: false };
-    // await this.userRepository.update(
-    //   {
-    //     id: userId,
-    //   },
-    //   {
-    //     verified: true,
-    //   },
-    // );
-    // return { verify: +emailCode === dto.code };
-    const txt = new ActiveXObject('Scripting.FileSystemObject');
-    const s = txt.CreateTextFile(`${dto.email}.txt`, true);
-    s.WriteLine(`${dto.code}`);
-    s.Close();
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user?.id) throw new NotFoundException('Пользователь не найден');
+    if (+user.confirmation_code !== +dto.code) return { verify: false };
+    await this.userRepository.update(user, {
+      verified: true,
+      confirmation_code: null,
+    });
+    return { verify: +user.confirmation_code === +dto.code };
   }
 }

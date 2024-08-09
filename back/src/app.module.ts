@@ -13,7 +13,6 @@ import { ShopModule } from './shop/shop.module';
 import { ManufactureModule } from './manufacture/manufacture.module';
 import { CategoryModule } from './category/category.module';
 import { MailModule } from './mail/mail.module';
-import { CodeCacheService } from './cashe/cashe.service';
 
 @Module({
   imports: [
@@ -29,7 +28,7 @@ import { CodeCacheService } from './cashe/cashe.service';
     CategoryModule,
     MailModule,
   ],
-  providers: [...databaseProviders, CodeCacheService],
+  providers: [...databaseProviders],
   exports: [...databaseProviders],
   controllers: [AppController],
 })
