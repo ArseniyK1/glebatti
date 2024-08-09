@@ -31,7 +31,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     if (!!createUserDto.password && !!createUserDto.login) {
       const existsUser = await this.userRepository.findOne({
-        where: { login: createUserDto?.login },
+        where: { login: createUserDto.login, email: createUserDto.email },
       });
       if (existsUser?.id)
         throw new ConflictException('Такой пользователь уже существует');

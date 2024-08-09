@@ -33,6 +33,13 @@
                 label="Пароль"
                 lazy-rules
               />
+              <q-input
+                rounded
+                v-model="verifyCode"
+                label="Введите код"
+                lazy-rules
+                v-if="verifyCodeVisible"
+              />
               <q-checkbox
                 v-model="isSeller"
                 label="Зарегистрироваться как продавец"
@@ -43,12 +50,20 @@
                   :label="isRegister ? 'Зарегистрироваться' : 'Войти'"
                   @click="handleSign"
                   type="button"
-                  color="primary"
+                  color="accent"
+                />
+                <q-btn
+                  label="Проверить код"
+                  @click="handleVerify"
+                  type="button"
+                  color="accent"
+                  v-if="verifyCodeVisible"
                 />
                 <p class="q-mt-md">
                   {{ isRegister ? "Уже есть аккаунт ?" : "Нет аккаунта ?" }}
                   <q-badge
-                    class="cursor-pointer"
+                    class="cursor-pointer q-pa-sm"
+                    color="info"
                     @click="isRegister = !isRegister"
                   >
                     {{ isRegister ? "Войти" : "Зарегистрироваться" }}
@@ -72,6 +87,8 @@ const password = ref("test");
 const email = ref("kiselev-ars02@yandex.ru");
 const isRegister = ref(false);
 const isSeller = ref(false);
+const verifyCode = ref("");
+const verifyCodeVisible = ref(false);
 const showEmail = () => {
   isRegister.value = !isRegister.value;
 };
@@ -87,9 +104,19 @@ const handleSign = async () => {
       isSeller.value,
       email.value
     );
+    verifyCodeVisible.value = true;
   } else {
     await authStore.login(username.value, password.value);
   }
+};
+
+const handleVerify = async () => {
+  await authStore.verifyCode(
+    email.value,
+    verifyCode.value,
+    username.value,
+    password.value
+  );
 };
 </script>
 

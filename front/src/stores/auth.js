@@ -3,6 +3,7 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 import { Loading, Notify } from "quasar";
 import { normaliseDate } from "src/helpers/format";
 import { rolesValue } from "src/constants";
+import axios from "axios";
 
 export const useAuthStore = defineStore({
   id: "auth",
@@ -113,13 +114,9 @@ export const useAuthStore = defineStore({
           isSeller,
           email,
         });
-        // const access_token = await this.login(login, password);
-
-        // localStorage.setItem("user-token", data?.access_token);
-        // localStorage.setItem("user-login", data?.user?.login);
-        // localStorage.setItem("user-name", data?.user?.first_name);
-        // this.token = access_token?.access_token;
-        // this.router.push("/products");
+        localStorage.setItem("user-token", data?.access_token);
+        localStorage.setItem("user-login", data?.user?.login);
+        localStorage.setItem("user-name", data?.user?.first_name);
       } catch (e) {
         Notify.create({
           type: "negative",
@@ -130,11 +127,22 @@ export const useAuthStore = defineStore({
       }
     },
 
-    async verifyCode(email, code) {
-      const { data } = await api.post("api/mail/verificationCode", {
-        email,
-        code,
-      });
+    async verifyCode(email, code, login, password) {
+      const { data } = await axios.post(
+        "http://localhost:7000/api/mail/verificationCode",
+        {
+          email,
+          code: +code,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+          },
+        }
+      );
+      const access_token = await this.login(login, password);
+      this.token = access_token?.access_token;
+      this.router.push("/products");
       return !!data.verify;
     },
   },
