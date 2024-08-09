@@ -6,7 +6,6 @@ import { RolesModule } from './roles/roles.module';
 import { databaseProviders } from './db/database.providers';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
-// import { OrganizationModule } from './organization/organization.module';
 import { StatusModule } from './status/status.module';
 import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
@@ -14,6 +13,7 @@ import { ShopModule } from './shop/shop.module';
 import { ManufactureModule } from './manufacture/manufacture.module';
 import { CategoryModule } from './category/category.module';
 import { MailModule } from './mail/mail.module';
+import { CodeCacheService } from './cashe/cashe.service';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { MailModule } from './mail/mail.module';
     CategoryModule,
     MailModule,
   ],
-  providers: [...databaseProviders],
+  providers: [...databaseProviders, CodeCacheService],
   exports: [...databaseProviders],
   controllers: [AppController],
 })

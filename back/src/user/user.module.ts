@@ -6,6 +6,7 @@ import { providers } from '../constants';
 import { databaseProviders } from '../db/database.providers';
 import { MulterModule } from '@nestjs/platform-express';
 import { MailService } from '../mail/mail.service';
+import { CodeCacheService } from '../cashe/cashe.service';
 
 @Module({
   imports: [
@@ -15,7 +16,13 @@ import { MailService } from '../mail/mail.service';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, ...providers, ...databaseProviders, MailService],
+  providers: [
+    UserService,
+    ...providers,
+    ...databaseProviders,
+    MailService,
+    CodeCacheService,
+  ],
   exports: [UserService],
 })
 export class UserModule {}

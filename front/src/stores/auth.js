@@ -113,14 +113,13 @@ export const useAuthStore = defineStore({
           isSeller,
           email,
         });
+        // const access_token = await this.login(login, password);
 
-        const access_token = await this.login(login, password);
-
-        localStorage.setItem("user-token", data?.access_token);
-        localStorage.setItem("user-login", data?.user?.login);
-        localStorage.setItem("user-name", data?.user?.first_name);
-        this.token = access_token?.access_token;
-        this.router.push("/products");
+        // localStorage.setItem("user-token", data?.access_token);
+        // localStorage.setItem("user-login", data?.user?.login);
+        // localStorage.setItem("user-name", data?.user?.first_name);
+        // this.token = access_token?.access_token;
+        // this.router.push("/products");
       } catch (e) {
         Notify.create({
           type: "negative",
@@ -129,6 +128,14 @@ export const useAuthStore = defineStore({
         });
         console.log(e);
       }
+    },
+
+    async verifyCode(email, code) {
+      const { data } = await api.post("api/mail/verificationCode", {
+        email,
+        code,
+      });
+      return !!data.verify;
     },
   },
 });

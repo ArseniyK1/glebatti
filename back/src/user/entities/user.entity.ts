@@ -36,6 +36,9 @@ export class User {
   @Column({ nullable: true })
   email: string;
 
+  @Column({ default: false })
+  verified: boolean;
+
   @OneToMany(() => Order, (order) => order.user)
   order: Order[];
 

@@ -18,6 +18,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryLawyerDto } from './dto/QueryLawyer.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../mail/mail.service';
+import { CodeCacheService } from '../cashe/cashe.service';
 
 @Injectable()
 export class UserService {
@@ -27,6 +28,7 @@ export class UserService {
     private roleService: RolesService,
     private jwtService: JwtService,
     private mailService: MailService,
+    private casheService: CodeCacheService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     if (!!createUserDto.password && !!createUserDto.login) {
@@ -52,7 +54,14 @@ export class UserService {
           roleId: role.id,
           password: hashPassword,
         });
-        await this.sendRegistrationEmail(user.email, user.login);
+        const verificationCode = this.generateVerificationCode();
+        await this.sendRegistrationEmail(
+          user.email,
+          user.login,
+          verificationCode,
+        );
+        this.casheService.set(user.email, verificationCode, 600 * 1000);
+        console.log(this.casheService.getAll());
         const payload = {
           userId: user.id,
           username: user.login,
@@ -68,10 +77,18 @@ export class UserService {
     }
   }
 
-  private async sendRegistrationEmail(email: string, login: string) {
-    const subject = 'Welcome to Our Service';
-    const text = `Dear ${login},\n\nThank you for registering with our service. We are excited to have you on board!\n\nBest regards,\nThe Team`;
-    const html = `<p>Dear ${login},</p><p>Thank you for registering with our service. We are excited to have you on board!</p><p>Best regards,<br>The Team</p>`;
+  private generateVerificationCode(): string {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
+
+  private async sendRegistrationEmail(
+    email: string,
+    login: string,
+    verificationCode: string,
+  ) {
+    const subject = 'Подтверждение почты на сервисе МузШоп';
+    const text = `Добрый день ${login},\n\nСпасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите код ${verificationCode}!\n\nСпасибо,\nКоманда разработчиков`;
+    const html = `<p>Добрый день ${login},</p><p>Спасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите код ${verificationCode}!</p><p>Спасибо,<br>Команда разработчиков</p>`;
 
     await this.mailService.sendMail(email, subject, text, html);
   }
