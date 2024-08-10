@@ -107,7 +107,6 @@ export const useAuthStore = defineStore({
       isSeller,
       email
     ) {
-      // Ensure date_of_birth is a Date instance
       try {
         Loading.show({ message: "Загрузка..." });
         const { data } = await api.post("api/user", {
@@ -119,7 +118,6 @@ export const useAuthStore = defineStore({
           isSeller,
           email,
         });
-        console.log("data", data);
         localStorage.setItem("user-login", data?.login);
         localStorage.setItem("user-email", data?.email);
         localStorage.setItem("user-pass", password);

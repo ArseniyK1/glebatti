@@ -4,14 +4,14 @@
       dense
       label="Название товара "
       v-model="name"
-      class="col-2"
+      :class="!isMobile ? 'col-2' : 'col-5'"
       :debounce="500"
     />
     <common-select
       dense
       label="Категория"
       v-model="category"
-      class="col-2"
+      :class="!isMobile ? 'col-2' : 'col-5'"
       :options="categoriesList"
       :option-label="(el) => el.name"
     />
@@ -19,7 +19,7 @@
       dense
       label="Магазин"
       v-model="shop"
-      class="col-2"
+      :class="!isMobile ? 'col-2' : 'col-5'"
       :options="shopsList"
       :option-label="(el) => el.name"
     />
@@ -27,7 +27,7 @@
       dense
       label="Производитель"
       v-model="manufacture"
-      class="col-2"
+      :class="!isMobile ? 'col-2' : 'col-5'"
       :options="manufactureList"
       :option-label="(el) => el.name"
     />
@@ -41,10 +41,12 @@ import { useCategoryStore } from "stores/category";
 import { useManufactureStore } from "stores/manufacture";
 import { useProductStore } from "stores/product";
 import { mdiShapePlusOutline } from "@mdi/js";
+import { useQuasar } from "quasar";
 
 const categoryStore = useCategoryStore();
 const manufactureStore = useManufactureStore();
 const productStore = useProductStore();
+const quasar = useQuasar();
 
 const shop = ref("");
 const name = ref("");
@@ -53,6 +55,7 @@ const manufacture = ref("");
 
 const categoriesList = computed(() => categoryStore.getCategories);
 const manufactureList = computed(() => manufactureStore.getManufactures);
+const isMobile = computed(() => quasar.screen.lt.md);
 const shopsList = [
   { id: 1, name: "Соната" },
   { id: 2, name: "Магнит" },

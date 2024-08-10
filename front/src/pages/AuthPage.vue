@@ -3,7 +3,7 @@
     <q-page-container>
       <q-page class="flex bg-image flex-center">
         <q-card
-          v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '30%' }"
+          v-bind:style="$q.screen.lt.md ? { width: '80%' } : { width: '30%' }"
         >
           <q-card-section>
             <q-avatar size="103px" class="absolute-center shadow-10">
@@ -81,13 +81,13 @@
                   v-if="verifyCodeVisible"
                 />
                 <p class="q-mt-md">
-                  {{ isRegister ? "Уже есть аккаунт ?" : "Нет аккаунта ?" }}
+                  {{ isRegister ? "Есть аккаунт?" : "Нет аккаунта?" }}
                   <q-badge
                     class="cursor-pointer q-pa-sm"
                     color="info"
                     @click="isRegister = !isRegister"
                   >
-                    {{ isRegister ? "Войти" : "Зарегистрироваться" }}
+                    {{ isRegister ? "Войти" : "Регистрация" }}
                   </q-badge>
                 </p>
               </div>
@@ -105,9 +105,11 @@ import { useAuthStore } from "stores/auth";
 import CommonInput from "components/common/CommonInput.vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
+
 const authStore = useAuthStore();
 const quasar = useQuasar();
 const router = useRouter();
+
 const username = ref("test");
 const password = ref("test");
 const email = ref("kiselev-ars02@yandex.ru");
@@ -118,10 +120,6 @@ const verifyCodeVisible = ref(false);
 const first_name = ref("Глеб");
 const last_name = ref("Поленников");
 const middle_name = ref("Александрович");
-
-const showEmail = () => {
-  isRegister.value = !isRegister.value;
-};
 
 const handleSign = async () => {
   if (isRegister.value) {

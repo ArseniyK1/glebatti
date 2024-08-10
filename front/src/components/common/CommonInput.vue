@@ -5,7 +5,7 @@
     outlined
     rounded
     :debounce="debounce"
-    color="transparent"
+    color="info"
     style="background-color: #e6e6fa; border-radius: 1.3rem"
     label-color="dark"
     :dense="dense"
@@ -18,7 +18,7 @@
     </template>
     <template v-slot:append>
       <q-icon
-        v-if="value"
+        v-if="value && !readonly"
         :style="{ opacity: modelValue ? 1 : 0 }"
         @click="clear"
         :name="mdiClose"

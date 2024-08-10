@@ -1,6 +1,6 @@
 <template>
   <q-toolbar class="flex justify-between bg-dark text-white background">
-    <div class="row items-center">
+    <div class="row items-center" v-if="!isMobile">
       <q-toolbar-title
         class="text-h6 montserrat-medium text-bold text-positive"
         @click="$router.push('/')"
@@ -22,7 +22,7 @@
         }"
       >
         <q-icon :name="icon" class="q-mr-sm"></q-icon>
-        {{ title }}
+        <span v-if="!isMobile">{{ title }} </span>
       </q-btn>
     </div>
     <div class="row items-center">
@@ -136,6 +136,7 @@ const menu = [
 ];
 
 const countProducts = computed(() => cartStore.getCountProducts);
+const isMobile = computed(() => quasar.screen.lt.md);
 
 const isActiveRoute = (route) => {
   return router.currentRoute.value.path === route;
