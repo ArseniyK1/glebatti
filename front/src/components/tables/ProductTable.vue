@@ -7,7 +7,7 @@
     @open="$emit('rowClick', $event)"
   >
     <template v-slot:top-right>
-      <common-drop-dawn label="Добавить" color="primary">
+      <common-drop-dawn label="Добавить" color="positive">
         <new-product-form />
       </common-drop-dawn>
     </template>

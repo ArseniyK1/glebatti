@@ -1,7 +1,7 @@
 <template>
   <common-table :columns="shopColumn" :rows="shops" title="Магазины">
     <template v-slot:top-right>
-      <common-drop-dawn label="Добавить" color="primary">
+      <common-drop-dawn label="Добавить" color="positive">
         <div class="row q-gutter-sm" style="max-width: 400px">
           <div class="col-12">
             <common-input label="Название" v-model="shopForm.name" dense />

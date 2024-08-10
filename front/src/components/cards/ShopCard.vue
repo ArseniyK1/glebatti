@@ -15,17 +15,22 @@
     <q-separator />
 
     <q-card-actions>
-      <q-btn color="primary" label="Контакты" />
+      <q-btn
+        color="primary"
+        :label="showNumber ? shopData.phonenumber : 'Показать номер'"
+        @click="showNumber = !showNumber"
+      />
     </q-card-actions>
   </q-card>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 const props = defineProps({
   shopData: {
     type: Object,
     required: () => {},
   },
 });
+const showNumber = ref(false);
 </script>

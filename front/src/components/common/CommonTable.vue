@@ -3,7 +3,7 @@
     <slot name="custom-top"></slot>
     <q-table
       :title="title"
-      class="standart-table relative-position bg-dark text-white"
+      class="standart-table relative-position text-white bg-info"
       :bordered="bordered"
       :columns="columns"
       :flat="flat"
