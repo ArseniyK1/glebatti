@@ -4,6 +4,7 @@
     :rows="products"
     title="Товары"
     height="100%"
+    @open="$emit('rowClick', $event)"
   >
     <template v-slot:top-right>
       <common-drop-dawn label="Добавить" color="primary">
@@ -16,7 +17,7 @@
 import CommonTable from "components/common/CommonTable.vue";
 import CommonDropDawn from "components/common/CommonDropDawn.vue";
 import CommonInput from "components/common/CommonInput.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, defineEmits } from "vue";
 import { useProductStore } from "stores/product";
 import NewProductForm from "components/forms/NewProductForm.vue";
 
@@ -66,6 +67,8 @@ const productsColumn = [
     sortable: true,
   },
 ];
+
+const emit = defineEmits(["rowClick"]);
 
 const loading = ref(false);
 const productForm = ref({
