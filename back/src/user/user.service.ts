@@ -28,53 +28,9 @@ export class UserService {
     private jwtService: JwtService,
     private mailService: MailService,
   ) {}
-  async create(createUserDto: CreateUserDto) {
-    if (!!createUserDto.password && !!createUserDto.login) {
-      const existsUser = await this.userRepository.findOne({
-        where: { login: createUserDto.login, email: createUserDto.email },
-      });
-      if (existsUser?.id)
-        throw new ConflictException('Такой пользователь уже существует');
-      const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
-      const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
-
-      if (!!createUserDto.isSeller) {
-        const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
-        return await this.userRepository.save({
-          ...createUserDto,
-          roleId: role.id,
-          password: hashPassword,
-        });
-      } else {
-        const verificationCode = this.generateVerificationCode();
-        const role = await this.roleService.getRoleByValue(roleEnum.USER);
-        const user = await this.userRepository.save({
-          ...createUserDto,
-          roleId: role.id,
-          password: hashPassword,
-          confirmation_code: verificationCode,
-        });
-
-        await this.sendRegistrationEmail(
-          user.email,
-          user.login,
-          verificationCode,
-        );
-        const payload = {
-          userId: user.id,
-          username: user.login,
-          role: role.value,
-        };
-        return {
-          access_token: await this.jwtService.signAsync(payload),
-          user: user,
-        };
-      }
-    } else {
-      throw new BadRequestException('Укажите логин и(или) пароль');
-    }
+  private generateVerificationCode(): string {
+    return Math.floor(1000 + Math.random() * 9000).toString();
   }
-
   private async sendRegistrationEmail(
     email: string,
     login: string,
@@ -85,6 +41,52 @@ export class UserService {
     const html = `<p>Добрый день, ${login}!</p><p>Спасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите следующий код: <h2><strong>${verificationCode}</strong></h2></p><p>С уважением, команда разработчиков.</p>`;
 
     await this.mailService.sendMail(email, subject, text, html);
+  }
+  async create(createUserDto: CreateUserDto) {
+    const existsUser = await this.userRepository.exists({
+      where: [{ login: createUserDto.login }, { email: createUserDto.email }],
+    });
+    if (!!existsUser)
+      throw new ConflictException(
+        'Пользователь с таким логином или почтой уже существует',
+      );
+
+    const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
+    const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
+
+    if (!!createUserDto.isSeller) {
+      const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
+      return await this.userRepository.save({
+        ...createUserDto,
+        roleId: role.id,
+        password: hashPassword,
+      });
+    } else {
+      const verificationCode = this.generateVerificationCode();
+      const role = await this.roleService.getRoleByValue(roleEnum.USER);
+      const user = await this.userRepository.save({
+        ...createUserDto,
+        roleId: role.id,
+        password: hashPassword,
+        confirmation_code: verificationCode,
+      });
+
+      await this.sendRegistrationEmail(
+        user.email,
+        user.login,
+        verificationCode,
+      );
+      // const payload = {
+      //   userId: user.id,
+      //   username: user.login,
+      //   role: role.value,
+      // };
+      // return {
+      //   access_token: await this.jwtService.signAsync(payload),
+      //   user: user,
+      // };
+      return user;
+    }
   }
 
   async updateUserContent(userId: number, dto: UpdateUserDto) {
@@ -233,9 +235,5 @@ export class UserService {
     } else {
       throw new NotFoundException('Такого пользователя не существует');
     }
-  }
-
-  private generateVerificationCode(): string {
-    return Math.floor(1000 + Math.random() * 9000).toString();
   }
 }

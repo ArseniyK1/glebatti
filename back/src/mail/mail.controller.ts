@@ -18,8 +18,9 @@ export class MailController {
     return { message: 'Email sent successfully' };
   }
 
+  @Public()
   @Post('verificationCode')
-  verificationCode(@Request() req: any, @Body() dto: VerifyCodeDto) {
-    return this.mailService.verificationCode(req.user.userId, dto);
+  verificationCode(@Body() dto: VerifyCodeDto) {
+    return this.mailService.verificationCode(dto);
   }
 }

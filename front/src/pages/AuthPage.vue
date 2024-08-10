@@ -19,22 +19,43 @@
           </q-card-section>
           <q-card-section>
             <q-form class="q-gutter-md">
-              <q-input
+              <common-input
+                v-model="first_name"
+                label="Имя"
+                dense
+                v-if="isRegister"
+              />
+              <common-input
+                v-model="last_name"
+                label="Фамилия"
+                dense
+                v-if="isRegister"
+              />
+              <common-input
+                v-model="middle_name"
+                dense
+                label="Отчество"
+                v-if="isRegister"
+              />
+              <common-input
                 v-model="email"
                 v-if="isRegister"
                 label="Почта"
+                dense
                 lazy-rules
               />
-              <q-input v-model="username" label="Логин" lazy-rules />
-              <q-input
+              <common-input v-model="username" label="Логин" lazy-rules dense />
+              <common-input
                 type="password"
+                dense
                 rounded
                 v-model="password"
                 label="Пароль"
                 lazy-rules
               />
-              <q-input
+              <common-input
                 rounded
+                dense
                 v-model="verifyCode"
                 label="Введите код"
                 lazy-rules
@@ -79,9 +100,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthStore } from "stores/auth";
+import CommonInput from "components/common/CommonInput.vue";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 const authStore = useAuthStore();
+const quasar = useQuasar();
+const router = useRouter();
 const username = ref("test");
 const password = ref("test");
 const email = ref("kiselev-ars02@yandex.ru");
@@ -89,6 +115,10 @@ const isRegister = ref(false);
 const isSeller = ref(false);
 const verifyCode = ref("");
 const verifyCodeVisible = ref(false);
+const first_name = ref("Глеб");
+const last_name = ref("Поленников");
+const middle_name = ref("Александрович");
+
 const showEmail = () => {
   isRegister.value = !isRegister.value;
 };
@@ -96,32 +126,49 @@ const showEmail = () => {
 const handleSign = async () => {
   if (isRegister.value) {
     await authStore.signUp(
-      "Тест",
-      "Тестов",
-      "Тестович",
+      first_name.value,
+      last_name.value,
+      middle_name.value,
       username.value,
       password.value,
       isSeller.value,
       email.value
     );
-    verifyCodeVisible.value = true;
+    if (!!localStorage.getItem("user-pass")) verifyCodeVisible.value = true;
   } else {
     await authStore.login(username.value, password.value);
   }
 };
 
 const handleVerify = async () => {
-  await authStore.verifyCode(
-    email.value,
-    verifyCode.value,
-    username.value,
-    password.value
-  );
+  await authStore.verifyCode(verifyCode.value);
 };
+
+onMounted(() => {
+  if (localStorage.getItem("user-token")) {
+    quasar.notify({
+      timeout: 10000,
+      message: "Вы уже авторизованы!",
+      color: "positive",
+      type: "positive",
+      position: "bottom-right",
+      actions: [
+        {
+          label: "На главную",
+          color: "white",
+          handler: async () => {
+            await router.push("/products");
+          },
+        },
+      ],
+    });
+  }
+});
 </script>
 
 <style>
 .bg-image {
-  background-image: linear-gradient(135deg, #7028e4 0%, #8f8f8f 100%);
+  //background-image: linear-gradient(135deg, #3d5a80 0%, #ffffff 100%);
+  background: #3d5a80;
 }
 </style>

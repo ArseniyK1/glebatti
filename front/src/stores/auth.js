@@ -28,7 +28,7 @@ export const useAuthStore = defineStore({
   actions: {
     async login(login, password) {
       try {
-        Loading.show();
+        Loading.show({ message: "Загрузка..." });
         delete api.defaults.headers.common["Authorization"];
         const { data } = await api.post("api/auth/login", {
           username: login,
@@ -53,7 +53,8 @@ export const useAuthStore = defineStore({
         return data;
       } catch (e) {
         Notify.create({
-          message: e?.message || "Ошибка авторизации",
+          message:
+            e?.response?.data?.message || e?.message || "Ошибка авторизации",
           type: "negative",
           color: "negative",
         });
@@ -72,11 +73,14 @@ export const useAuthStore = defineStore({
         this.roles = _data.roleId.value;
         return _data;
       } catch (e) {
-        Notify.create({
-          type: "negative",
-          color: "negative",
-          message: e?.message || "Ошибка загрузки профиля",
-        });
+        // Notify.create({
+        //   type: "negative",
+        //   color: "negative",
+        //   message:
+        //     e?.response?.data?.message ||
+        //     e?.message ||
+        //     "Ошибка загрузки профиля",
+        // });
         console.log(e);
       }
     },
@@ -105,6 +109,7 @@ export const useAuthStore = defineStore({
     ) {
       // Ensure date_of_birth is a Date instance
       try {
+        Loading.show({ message: "Загрузка..." });
         const { data } = await api.post("api/user", {
           login,
           first_name,
@@ -114,35 +119,48 @@ export const useAuthStore = defineStore({
           isSeller,
           email,
         });
-        localStorage.setItem("user-token", data?.access_token);
-        localStorage.setItem("user-login", data?.user?.login);
-        localStorage.setItem("user-name", data?.user?.first_name);
+        console.log("data", data);
+        localStorage.setItem("user-login", data?.login);
+        localStorage.setItem("user-email", data?.email);
+        localStorage.setItem("user-pass", password);
       } catch (e) {
+        console.log("catch", e);
         Notify.create({
           type: "negative",
           color: "negative",
-          message: e?.message || "Ошибка регистрации",
+          message:
+            e?.response?.data?.message || e?.message || "Ошибка регистрации",
         });
         console.log(e);
+      } finally {
+        Loading.hide();
       }
     },
 
-    async verifyCode(email, code, login, password) {
+    async verifyCode(code) {
       const { data } = await axios.post(
         "http://localhost:7000/api/mail/verificationCode",
         {
-          email,
+          login: localStorage.getItem("user-login"),
+          email: localStorage.getItem("user-email"),
           code: +code,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-          },
         }
       );
-      const access_token = await this.login(login, password);
-      this.token = access_token?.access_token;
-      this.router.push("/products");
+      if (!!data?.verify) {
+        const login_data = await this.login(
+          localStorage.getItem("user-login"),
+          localStorage.getItem("user-pass")
+        );
+        this.token = login_data?.access_token;
+        localStorage.removeItem("user-pass");
+        this.router.push("/products");
+      } else {
+        Notify.create({
+          type: "negative",
+          color: "negative",
+          message: "Неверный код верификации",
+        });
+      }
       return !!data.verify;
     },
   },

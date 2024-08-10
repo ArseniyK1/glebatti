@@ -35,9 +35,9 @@ export class MailService {
     console.log('Message sent: %s', info.messageId);
   }
 
-  async verificationCode(userId: number, dto: VerifyCodeDto) {
+  async verificationCode(dto: VerifyCodeDto) {
     const user = await this.userRepository.findOne({
-      where: { id: userId },
+      where: { login: dto.login, email: dto.email },
     });
     if (!user?.id) throw new NotFoundException('Пользователь не найден');
     if (+user.confirmation_code !== +dto.code) return { verify: false };
