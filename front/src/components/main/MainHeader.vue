@@ -89,11 +89,13 @@ import {
   mdiCartOutline,
   mdiMusic,
   mdiHome,
-  mdiListBoxOutline,
+  mdiInvoiceTextClockOutline,
   mdiStore,
   mdiHomeCity,
   mdiSecurity,
   mdiWarehouse,
+  mdiInvoiceListOutline,
+  mdiShoppingOutline,
 } from "@mdi/js";
 import {
   computed,
@@ -114,7 +116,12 @@ const cartStore = useCartStore();
 
 const filteredMenu = ref([]);
 const menu = [
-  { title: "Каталог", route: "/products", icon: mdiListBoxOutline, show: true },
+  {
+    title: "Каталог",
+    route: "/products",
+    icon: mdiShoppingOutline,
+    show: true,
+  },
   {
     title: "Магазины",
     route: "/shops",
@@ -132,6 +139,18 @@ const menu = [
     route: "/admin-panel",
     icon: mdiSecurity,
     show: authStore.isAdmin,
+  },
+  {
+    title: "Заказы",
+    route: "/orders",
+    icon: mdiInvoiceListOutline,
+    show: true || authStore.isUser,
+  },
+  {
+    title: "Заявки",
+    route: "/requests",
+    icon: mdiInvoiceTextClockOutline,
+    show: true || authStore.isSeller,
   },
 ];
 
@@ -151,6 +170,7 @@ const isActiveRouteCart = () => {
 
 const goToProfile = () => router.push("/profile");
 const logout = () => {
+  cartStore.clearCart();
   localStorage.clear();
   router.push("/auth");
 };

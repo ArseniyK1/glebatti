@@ -45,6 +45,10 @@ export const useCartStore = defineStore({
         return el;
       });
     },
+    clearCart() {
+      this.products = [];
+      this.totalPrice = 0;
+    },
   },
 });
 
