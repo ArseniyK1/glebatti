@@ -2,11 +2,11 @@
   <q-toolbar class="flex justify-between bg-dark text-white background">
     <div class="row items-center" v-if="!isMobile">
       <q-toolbar-title
-        class="text-h6 montserrat-medium text-bold text-positive"
+        class="text-h6 montserrat-medium text-bold text-negative"
         @click="$router.push('/')"
         style="cursor: pointer"
       >
-        <q-icon :name="mdiMusic" color="positive"></q-icon>
+        <q-icon :name="mdiMusic" color="negative"></q-icon>
         МузШоп
       </q-toolbar-title>
     </div>
