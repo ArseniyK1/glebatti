@@ -75,6 +75,6 @@ export const useDictProduct = defineStore({
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useProductStore, import.meta.hot));
-  console.info(`🍍 HMR Update "${useProductStore().$id}" at ${new Date()}`);
+  import.meta.hot.accept(acceptHMRUpdate(useDictProduct, import.meta.hot));
+  console.info(`🍍 HMR Update "${useDictProduct().$id}" at ${new Date()}`);
 }

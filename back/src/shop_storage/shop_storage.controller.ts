@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Request,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { ShopStorageService } from './shop_storage.service';
 import { AddProductStorageDto } from './dto/add-product-storage.dto';
+import { Role, Roles } from '../roles/decorators/roles.decorator';
 
 @Controller('shop-storage')
 export class ShopStorageController {
@@ -24,5 +16,11 @@ export class ShopStorageController {
       req.user.userId,
       dto,
     );
+  }
+
+  @Roles(Role.seller)
+  @Get('productList')
+  async productListStorage(@Request() req: any) {
+    return await this.shopStorageService.productListStorage(req.user.shopId);
   }
 }

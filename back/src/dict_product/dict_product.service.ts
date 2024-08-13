@@ -39,10 +39,9 @@ export class DictProductService {
         query.manufactureId
           ? { manufacture: { id: +query.manufactureId } }
           : {},
-        query.shopId ? { shops: { id: +query.shopId } } : {},
         query.name ? { name: Like(`%${query.name}%`) } : {},
       ],
-      relations: { category: true, manufacture: true, shops: true },
+      relations: { category: true, manufacture: true },
       order: { id: 'DESC' },
     });
   }

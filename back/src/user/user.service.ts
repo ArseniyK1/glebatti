@@ -53,16 +53,22 @@ export class UserService {
 
     const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
     const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
-
+    const verificationCode = this.generateVerificationCode();
     if (!!createUserDto.isSeller) {
       const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
-      return await this.userRepository.save({
+      const seller = await this.userRepository.save({
         ...createUserDto,
         roleId: role.id,
         password: hashPassword,
+        confirmation_code: verificationCode,
       });
+      await this.sendRegistrationEmail(
+        seller.email,
+        seller.login,
+        verificationCode,
+      );
+      return seller;
     } else {
-      const verificationCode = this.generateVerificationCode();
       const role = await this.roleService.getRoleByValue(roleEnum.USER);
       const user = await this.userRepository.save({
         ...createUserDto,

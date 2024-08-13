@@ -32,7 +32,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useQuasar } from "quasar";
 import CardProduct from "components/cards/CardProduct.vue";
-import { useProductStore } from "stores/product";
+import { useDictProduct } from "stores/dict_product";
 import { mdiPlus } from "@mdi/js";
 import { useAuthStore } from "stores/auth";
 import CommonDialog from "components/common/CommonDialog.vue";
@@ -43,7 +43,7 @@ import LeftDialog from "components/common/LeftDialog.vue";
 import ProductInfoCard from "components/cards/ProductInfoCard.vue";
 
 const $q = useQuasar();
-const productStore = useProductStore();
+const dictProductStore = useDictProduct();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 
@@ -65,14 +65,14 @@ const openProductInfo = (product) => {
 };
 
 watch(
-  () => productStore.product_list,
-  () => (data.value = productStore.getProducts),
+  () => dictProductStore.product_list,
+  () => (data.value = dictProductStore.getProducts),
   { deep: true }
 );
 
 onMounted(async () => {
-  await productStore.list();
-  data.value = productStore.getProducts;
+  await dictProductStore.list();
+  data.value = dictProductStore.getProducts;
 });
 </script>
 

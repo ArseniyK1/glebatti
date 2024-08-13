@@ -18,7 +18,7 @@ import { Roles } from '../roles/entities/roles.entity';
 export class AuthService {
   constructor(
     @Inject('USER_REPOSITORY')
-    private userRepository: Repository<User>,
+    private userRepository: Repository<any>,
     private jwtService: JwtService,
     private rolesService: RolesService,
   ) {}
@@ -29,7 +29,7 @@ export class AuthService {
   ): Promise<{ access_token: string }> {
     const user = await this.userRepository.findOne({
       where: { login: username },
-      relations: { roleId: true },
+      relations: { roleId: true, shop: true },
     });
     if (!user?.id)
       throw new NotFoundException('Такого пользователя не существует!');
@@ -41,6 +41,7 @@ export class AuthService {
     const payload = {
       userId: user.id,
       username: user.login,
+      shopId: user.shop?.id,
       role: role.value,
     };
     return {
@@ -53,6 +54,6 @@ export class AuthService {
       where: { id: req.user.userId },
       relations: { roleId: true },
     });
-    return user;
+    return req.user;
   }
 }

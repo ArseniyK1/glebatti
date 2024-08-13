@@ -39,13 +39,13 @@ import CommonInput from "components/common/CommonInput.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useCategoryStore } from "stores/category";
 import { useManufactureStore } from "stores/manufacture";
-import { useProductStore } from "stores/product";
+import { useDictProduct } from "stores/dict_product";
 import { mdiShapePlusOutline } from "@mdi/js";
 import { useQuasar } from "quasar";
 
 const categoryStore = useCategoryStore();
 const manufactureStore = useManufactureStore();
-const productStore = useProductStore();
+const dictProductStore = useDictProduct();
 const quasar = useQuasar();
 
 const shop = ref("");
@@ -65,7 +65,7 @@ const shopsList = [
 watch(
   () => [name.value, shop.value, category.value, manufacture.value],
   async () => {
-    await productStore.list(
+    await dictProductStore.list(
       name.value,
       category.value ? String(category.value?.id) : "",
       manufacture.value ? String(manufacture.value?.id) : "",

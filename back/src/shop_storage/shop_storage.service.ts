@@ -41,8 +41,16 @@ export class ShopStorageService {
     });
   }
 
-  async findAll() {
-    return `This action returns all shopStorage`;
+  async productListStorage(shopId: number) {
+    console.log(shopId);
+    return await this.shopStorageRepository.find({
+      where: {
+        shop: {
+          id: shopId,
+        },
+      },
+      relations: { product: true },
+    });
   }
 
   async checkQuantityOnStorage(
