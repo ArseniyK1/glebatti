@@ -11,20 +11,19 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import { DictProductService } from './dict_product.service';
+import { CreateDict_productDto } from './dto/create-dict_product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
-import { ProductAddStorageDto } from './dto/product-add-storage.dto';
 import { ProductListDto } from './dto/product-list.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import { extname } from 'path';
 import { diskStorage } from 'multer';
 
-@Controller('product')
-export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+@Controller('dict_product')
+export class DictProductController {
+  constructor(private readonly dictProductService: DictProductService) {}
 
   @Post('create')
   @UseInterceptors(
@@ -46,38 +45,33 @@ export class ProductController {
   @Roles(Role.admin)
   async create(
     @Request() req: any,
-    @Body() createProductDto: CreateProductDto,
+    @Body() createProductDto: CreateDict_productDto,
     @UploadedFile() photo: Express.Multer.File,
   ) {
-    return await this.productService.create(createProductDto, photo);
+    return await this.dictProductService.create(createProductDto, photo);
   }
 
-  @Post('add_storage')
-  @Roles(Role.seller)
-  async product_add_storage(
-    @Request() req: any,
-    @Body() dto: ProductAddStorageDto,
-  ) {
-    return await this.productService.product_add_storage(req.user, dto);
-  }
+  // @Post('add_storage')
+  // @Roles(Role.seller)
+  // async product_add_storage(
+  //   @Request() req: any,
+  //   @Body() dto: ProductAddStorageDto,
+  // ) {
+  //   return await this.productService.product_add_storage(req.user, dto);
+  // }
 
   @Get('list')
   findAll(@Query() query: ProductListDto) {
-    return this.productService.findAll(query);
+    return this.dictProductService.findAll(query);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+    return this.dictProductService.findOne(+id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+    return this.dictProductService.remove(+id);
   }
 }

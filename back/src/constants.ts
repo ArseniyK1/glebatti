@@ -1,10 +1,11 @@
 import { DataSource } from 'typeorm';
 import { User } from './user/entities/user.entity';
 import { Roles } from './roles/entities/roles.entity';
-import { Product } from './product/entities/product.entity';
 import { Shop } from './shop/entities/shop.entity';
 import { Category } from './category/entities/category.entity';
 import { Manufacture } from './manufacture/entities/manufacture.entity';
+import { DictProduct } from './dict_product/entities/dict_product.entity';
+import { ShopStorage } from './shop_storage/entities/shop_storage.entity';
 // import { Request } from './request/entities/request.entity';
 // import { Organization } from './organization/entities/organization.entity';
 
@@ -21,7 +22,8 @@ export const providers = [
   },
   {
     provide: 'PRODUCT_REPOSITORY',
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(Product),
+    useFactory: (dataSource: DataSource) =>
+      dataSource.getRepository(DictProduct),
     inject: ['DATA_SOURCE'],
   },
   {
@@ -40,7 +42,12 @@ export const providers = [
       dataSource.getRepository(Manufacture),
     inject: ['DATA_SOURCE'],
   },
-
+  {
+    provide: 'SHOP_STORAGE_REPOSITORY',
+    useFactory: (dataSource: DataSource) =>
+      dataSource.getRepository(ShopStorage),
+    inject: ['DATA_SOURCE'],
+  },
   // {
   //   provide: 'REQUEST_REPOSITORY',
   //   useFactory: (dataSource: DataSource) => dataSource.getRepository(Request),

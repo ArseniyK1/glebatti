@@ -5,7 +5,7 @@ import { normaliseDate } from "src/helpers/format";
 import { rolesValue } from "src/constants";
 import { useAuthStore } from "stores/auth";
 
-export const useProductStore = defineStore({
+export const useDictProduct = defineStore({
   id: "product",
   state: () => ({
     product_list: [],
@@ -19,7 +19,7 @@ export const useProductStore = defineStore({
     async list(name = "", categoryId = "", manufactureId = "", shopId = "") {
       try {
         Loading.show({ message: "Загрузка..." });
-        const { data } = await api.get("api/product/list", {
+        const { data } = await api.get("api/dict_product/list", {
           params: { name, categoryId, manufactureId, shopId },
         });
         this.product_list = data;
@@ -43,7 +43,7 @@ export const useProductStore = defineStore({
       try {
         Loading.show({ message: "Загрузка..." });
         const { data } = await api({
-          url: "api/product/create",
+          url: "api/dict_product/create",
           method: "post",
           headers: {
             "Content-Type": "multipart/form-data",

@@ -6,12 +6,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// import { Request } from '../../request/entities/request.entity';
 import { Roles } from '../../roles/entities/roles.entity';
 import { Order } from '../../order/entities/order.entity';
 import { Shop } from '../../shop/entities/shop.entity';
-import { Manufacture } from '../../manufacture/entities/manufacture.entity';
-// import { Organization } from '../../organization/entities/organization.entity';
+import { DictProduct } from '../../dict_product/entities/dict_product.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -42,12 +40,18 @@ export class User {
   @Column({ nullable: true })
   confirmation_code: number;
 
-  @OneToMany(() => Order, (order) => order.user)
-  order: Order[];
+  @OneToMany(() => Order, (order) => order.buyer)
+  buyer_order: Order[];
+
+  @OneToMany(() => Order, (order) => order.seller)
+  seller_order: Order[];
 
   @ManyToOne(() => Shop, (shop) => shop.user)
   @JoinColumn()
   shop: Shop;
+
+  @OneToMany(() => DictProduct, (dict_product) => dict_product.admin)
+  dict_product: DictProduct[];
 
   @ManyToOne(() => Roles, (roles) => roles.user)
   @JoinColumn({ name: 'roleId' })

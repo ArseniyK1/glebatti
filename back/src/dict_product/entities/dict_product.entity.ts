@@ -3,15 +3,16 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Shop } from '../../shop/entities/shop.entity';
-import { Order } from '../../order/entities/order.entity';
 import { Manufacture } from '../../manufacture/entities/manufacture.entity';
 import { Category } from '../../category/entities/category.entity';
+import { ShopStorage } from '../../shop_storage/entities/shop_storage.entity';
+import { User } from '../../user/entities/user.entity';
 
-@Entity()
-export class Product {
+@Entity({ name: 'dict_product' })
+export class DictProduct {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,10 +23,10 @@ export class Product {
   model: string;
 
   @Column({ nullable: true })
-  price: number;
+  photo: string;
 
   @Column({ nullable: true })
-  photo: string;
+  quantity: number;
 
   @ManyToOne(() => Manufacture, (manufacture) => manufacture.product)
   @JoinColumn()
@@ -35,11 +36,9 @@ export class Product {
   @JoinColumn()
   category: Category;
 
-  @ManyToOne(() => Shop, (shop) => shop.products)
-  @JoinColumn()
-  shops: Shop;
+  @ManyToOne(() => User, (user) => user.dict_product)
+  admin: User;
 
-  @ManyToOne(() => Order, (order) => order.products)
-  @JoinColumn()
-  orders: Order;
+  @OneToMany(() => ShopStorage, (shop) => shop.product)
+  shopStorage: ShopStorage[];
 }

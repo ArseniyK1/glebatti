@@ -7,12 +7,17 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CreatedAt } from '@sequelize/core/types/decorators/legacy';
-import { Roles } from '../../roles/entities/roles.entity';
-import { Status } from '../../status/entities/status.entity';
-import { Product } from '../../product/entities/product.entity';
+
 import { Shop } from '../../shop/entities/shop.entity';
 import { User } from '../../user/entities/user.entity';
+import { DictProduct } from '../../dict_product/entities/dict_product.entity';
+import { ShopStorage } from '../../shop_storage/entities/shop_storage.entity';
+
+enum StatusEnum {
+  CREATED = 'CREATED',
+  SUCCESS = 'SUCCESS',
+  CANCELED = 'CANCELED',
+}
 
 @Entity()
 export class Order {
@@ -20,22 +25,29 @@ export class Order {
   id: number;
   @Column({ nullable: true })
   order_sum: number;
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   created_at: Date;
 
-  @ManyToOne(() => Status, (status) => status.order)
-  status: Status;
+  @Column({ nullable: true })
+  amount: number;
 
-  @ManyToOne(() => User, (user) => user.order)
-  user: User;
+  @Column({ type: 'enum', enum: StatusEnum, default: StatusEnum.CREATED })
+  status: StatusEnum;
+
+  @ManyToOne(() => User, (user) => user.buyer_order)
+  buyer: User;
+
+  @ManyToOne(() => User, (user) => user.seller_order)
+  seller: User;
 
   @ManyToOne(() => Shop, (shop) => shop.order)
   @JoinColumn()
   shop: Shop;
 
-  @OneToMany(() => Product, (product) => product.orders)
-  products: Product[];
+  @OneToMany(() => ShopStorage, (shopstorage) => shopstorage.order)
+  shop_storage: ShopStorage[];
 }

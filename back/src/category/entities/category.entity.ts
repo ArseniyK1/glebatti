@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Product } from '../../product/entities/product.entity';
+import { DictProduct } from '../../dict_product/entities/dict_product.entity';
 
 @Entity()
 export class Category {
@@ -9,6 +9,6 @@ export class Category {
   @Column({ nullable: true })
   name: string;
 
-  @OneToMany(() => Product, (product) => product.category)
-  product: Product[];
+  @OneToMany(() => DictProduct, (product) => product.category)
+  product: DictProduct[];
 }

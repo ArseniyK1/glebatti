@@ -26,7 +26,6 @@ import {
 } from '@nestjs/swagger';
 import { InfoAboutLawyerDto } from './dto/InfoAboutLawyer.dto';
 import { GetInfoAboutLawyerDto } from './dto/getInfoAboutLawyer.dto';
-import { FindOneUserDto } from './dto/FindOneUser.dto';
 import { QueryLawyerDto } from './dto/QueryLawyer.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -73,12 +72,6 @@ export class UserController {
   @Get('getInfoAboutLawyer')
   getInfoAboutLawyer(@Query() query: InfoAboutLawyerDto) {
     return this.userService.getInfoAboutLawyer(query);
-  }
-
-  @Get('byId')
-  @ApiOperation({ summary: 'Получение данных о конкретном пользователе' })
-  findOne(@Query() query: FindOneUserDto) {
-    return this.userService.findOne(+query._id);
   }
 
   @Patch()

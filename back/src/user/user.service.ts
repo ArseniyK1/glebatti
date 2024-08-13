@@ -236,4 +236,13 @@ export class UserService {
       throw new NotFoundException('Такого пользователя не существует');
     }
   }
+
+  async getShopSeller(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: { shop: true },
+    });
+    const { shop } = user;
+    return shop;
+  }
 }

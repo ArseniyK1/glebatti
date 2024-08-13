@@ -2,17 +2,16 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { RolesModule } from './roles/roles.module';
-// import { RequestModule } from './request/request.module';
 import { databaseProviders } from './db/database.providers';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
-import { StatusModule } from './status/status.module';
 import { OrderModule } from './order/order.module';
-import { ProductModule } from './product/product.module';
+import { DictProductModule } from './dict_product/dict_product.module';
 import { ShopModule } from './shop/shop.module';
 import { ManufactureModule } from './manufacture/manufacture.module';
 import { CategoryModule } from './category/category.module';
 import { MailModule } from './mail/mail.module';
+import { ShopStorageModule } from './shop_storage/shop_storage.module';
 
 @Module({
   imports: [
@@ -20,13 +19,13 @@ import { MailModule } from './mail/mail.module';
     UserModule,
     RolesModule,
     AuthModule,
-    StatusModule,
     OrderModule,
-    ProductModule,
+    DictProductModule,
     ShopModule,
     ManufactureModule,
     CategoryModule,
     MailModule,
+    ShopStorageModule,
   ],
   providers: [...databaseProviders],
   exports: [...databaseProviders],

@@ -11,7 +11,7 @@ import {
 import { ManufactureService } from './manufacture.service';
 import { CreateManufactureDto } from './dto/create-manufacture.dto';
 import { UpdateManufactureDto } from './dto/update-manufacture.dto';
-import { ProductListDto } from '../product/dto/product-list.dto';
+import { ProductListDto } from '../dict_product/dto/product-list.dto';
 import { ManufactureListDto } from './dto/manufacture-list.dto';
 
 @Controller('manufacture')

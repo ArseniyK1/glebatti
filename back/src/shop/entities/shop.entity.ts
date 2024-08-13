@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Product } from '../../product/entities/product.entity';
+import { DictProduct } from '../../dict_product/entities/dict_product.entity';
 import { User } from '../../user/entities/user.entity';
 import { Order } from '../../order/entities/order.entity';
+import { ShopStorage } from '../../shop_storage/entities/shop_storage.entity';
 
 @Entity()
 export class Shop {
@@ -23,7 +24,7 @@ export class Shop {
   @OneToMany(() => User, (user) => user.shop)
   user: User[];
 
-  @OneToMany(() => Product, (product) => product.shops)
-  products: Product[];
+  @OneToMany(() => ShopStorage, (shop_storage) => shop_storage.shop)
+  shop_storage: ShopStorage[];
 }
 //

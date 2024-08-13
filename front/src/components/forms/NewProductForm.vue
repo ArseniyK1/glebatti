@@ -48,14 +48,14 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { useProductStore } from "stores/product";
 import { useCategoryStore } from "stores/category";
 import CommonInput from "components/common/CommonInput.vue";
 import CommonSelect from "components/common/CommonSelect.vue";
 import { useManufactureStore } from "stores/manufacture";
 import { Notify } from "quasar";
+import { useDictProduct } from "stores/dict_product";
 
-const productStore = useProductStore();
+const dictProductStore = useDictProduct();
 const categoryStore = useCategoryStore();
 const manufactureStore = useManufactureStore();
 
@@ -79,7 +79,7 @@ const onSubmit = async () => {
   formData.append("photo", productPhoto.value);
 
   try {
-    const changeData = await productStore.createProduct(formData);
+    const changeData = await dictProductStore.createProduct(formData);
     if (changeData) {
       Notify.create("Чтобы изменения вступили в силу обновите страницу!");
     }

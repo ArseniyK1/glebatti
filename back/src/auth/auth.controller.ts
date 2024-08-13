@@ -11,7 +11,6 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ReqGuardsReturnObject } from '../return-object/reqGuards.return-object';
 import { Public } from './public.decorator';
 
 @ApiTags('auth')
@@ -28,8 +27,6 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  @ApiOperation({ summary: 'Получение профиля' })
-  @ApiResponse({ status: 200, type: ReqGuardsReturnObject })
   getProfile(@Request() req) {
     return this.authService.getProfile(req);
   }

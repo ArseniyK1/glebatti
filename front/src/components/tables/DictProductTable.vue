@@ -2,7 +2,7 @@
   <common-table
     :columns="productsColumn"
     :rows="products"
-    title="Товары"
+    title="Справочник товаров"
     height="100%"
     @open="$emit('rowClick', $event)"
   >
@@ -18,10 +18,10 @@ import CommonTable from "components/common/CommonTable.vue";
 import CommonDropDawn from "components/common/CommonDropDawn.vue";
 import CommonInput from "components/common/CommonInput.vue";
 import { computed, onMounted, ref, defineEmits } from "vue";
-import { useProductStore } from "stores/product";
 import NewProductForm from "components/forms/NewProductForm.vue";
+import { useDictProduct } from "stores/dict_product";
 
-const productStore = useProductStore();
+const dictProductStore = useDictProduct();
 
 const productsColumn = [
   {
@@ -79,13 +79,13 @@ const productForm = ref({
   category: "",
 });
 
-const products = computed(() => productStore.getProducts);
+const products = computed(() => dictProductStore.getProducts);
 
 const createProduct = async () => {};
 
 onMounted(async () => {
   loading.value = true;
-  await productStore.list();
+  await dictProductStore.list();
   loading.value = false;
 });
 </script>
