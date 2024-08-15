@@ -21,7 +21,6 @@
       virtual-scroll
       @virtual-scroll="scrollHandler"
       ref="tableRef"
-      hide-bottom
     >
       <div
         v-if="isLoading"

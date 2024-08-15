@@ -54,6 +54,6 @@ export class AuthService {
       where: { id: req.user.userId },
       relations: { roleId: true },
     });
-    return req.user;
+    return user;
   }
 }

@@ -39,13 +39,14 @@ import CommonInput from "components/common/CommonInput.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useCategoryStore } from "stores/category";
 import { useManufactureStore } from "stores/manufacture";
-import { useDictProduct } from "stores/dict_product";
-import { mdiShapePlusOutline } from "@mdi/js";
 import { useQuasar } from "quasar";
+import { useStorageStore } from "stores/storage";
+import { useShopStore } from "stores/shop";
 
 const categoryStore = useCategoryStore();
 const manufactureStore = useManufactureStore();
-const dictProductStore = useDictProduct();
+const storageStore = useStorageStore();
+const shopStore = useShopStore();
 const quasar = useQuasar();
 
 const shop = ref("");
@@ -56,26 +57,23 @@ const manufacture = ref("");
 const categoriesList = computed(() => categoryStore.getCategories);
 const manufactureList = computed(() => manufactureStore.getManufactures);
 const isMobile = computed(() => quasar.screen.lt.md);
-const shopsList = [
-  { id: 1, name: "Соната" },
-  { id: 2, name: "Магнит" },
-  { id: 3, name: "Музыка" },
-];
+const shopsList = computed(() => shopStore.getShops);
 
 watch(
   () => [name.value, shop.value, category.value, manufacture.value],
   async () => {
-    await dictProductStore.list(
-      name.value,
-      category.value ? String(category.value?.id) : "",
-      manufacture.value ? String(manufacture.value?.id) : "",
-      shop.value ? String(shop.value?.id) : ""
-    );
+    await storageStore.catalogueList({
+      categoryId: category.value ? String(category.value?.id) : "",
+      productName: name.value,
+      manufactureId: manufacture.value ? String(manufacture.value?.id) : "",
+      shopId: shop.value ? String(shop.value?.id) : "",
+    });
   }
 );
 
 onMounted(async () => {
   await categoryStore.list();
   await manufactureStore.list();
+  await shopStore.list();
 });
 </script>

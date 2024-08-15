@@ -7,7 +7,11 @@
     @open="$emit('rowClick', $event)"
   >
     <template v-slot:top-right>
-      <common-drop-dawn label="Добавить" color="positive">
+      <common-drop-dawn
+        label="Добавить"
+        color="positive"
+        v-if="authStore.isAdmin"
+      >
         <new-product-form />
       </common-drop-dawn>
     </template>
@@ -20,8 +24,10 @@ import CommonInput from "components/common/CommonInput.vue";
 import { computed, onMounted, ref, defineEmits } from "vue";
 import NewProductForm from "components/forms/NewProductForm.vue";
 import { useDictProduct } from "stores/dict_product";
+import { useAuthStore } from "stores/auth";
 
 const dictProductStore = useDictProduct();
+const authStore = useAuthStore();
 
 const productsColumn = [
   {
@@ -42,13 +48,6 @@ const productsColumn = [
     name: "model",
     label: "Модель",
     field: "model",
-    align: "left",
-    sortable: true,
-  },
-  {
-    name: "price",
-    label: "Цена",
-    field: "price",
     align: "left",
     sortable: true,
   },

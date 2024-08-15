@@ -8,7 +8,7 @@
       position="right"
       full-height
       :persistent="persistent"
-      class="z-max"
+      style="z-index: 2000"
     >
       <q-card class="my-dialog" :style="calcMyDialogWidth">
         <div class="title q-pa-md row items-center">

@@ -32,20 +32,15 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useQuasar } from "quasar";
 import CardProduct from "components/cards/CardProduct.vue";
-import { useDictProduct } from "stores/dict_product";
-import { mdiPlus } from "@mdi/js";
-import { useAuthStore } from "stores/auth";
-import CommonDialog from "components/common/CommonDialog.vue";
-import NewProductForm from "components/forms/NewProductForm.vue";
 import { useCartStore } from "stores/cart";
 import ProductFilters from "components/forms/ProductFilters.vue";
 import LeftDialog from "components/common/LeftDialog.vue";
 import ProductInfoCard from "components/cards/ProductInfoCard.vue";
+import { useStorageStore } from "stores/storage";
 
 const $q = useQuasar();
-const dictProductStore = useDictProduct();
-const authStore = useAuthStore();
 const cartStore = useCartStore();
+const storageStore = useStorageStore();
 
 const dialog = ref(false);
 const data = ref([]);
@@ -61,18 +56,26 @@ const addToCartHandler = (product) => {
 
 const openProductInfo = (product) => {
   dialog.value = true;
+  console.log(product);
   oneProductData.value = product;
 };
 
 watch(
-  () => dictProductStore.product_list,
-  () => (data.value = dictProductStore.getProducts),
+  () => storageStore.catalogue_list,
+  () => (data.value = storageStore.getCatalogueList),
   { deep: true }
 );
 
 onMounted(async () => {
-  await dictProductStore.list();
-  data.value = dictProductStore.getProducts;
+  // await dictProductStore.list();
+  // data.value = dictProductStore.getProducts;
+  await storageStore.catalogueList({
+    categoryId: "",
+    productName: "",
+    manufactureId: "",
+    shopId: "",
+  });
+  data.value = storageStore.getCatalogueList;
 });
 </script>
 

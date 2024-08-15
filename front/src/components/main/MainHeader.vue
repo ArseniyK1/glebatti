@@ -91,7 +91,7 @@ import {
   mdiHome,
   mdiInvoiceTextClockOutline,
   mdiStore,
-  mdiHomeCity,
+  mdiStoreCogOutline,
   mdiSecurity,
   mdiWarehouse,
   mdiInvoiceListOutline,
@@ -132,7 +132,13 @@ const menu = [
     title: "Склад",
     route: "/storage",
     icon: mdiWarehouse,
-    show: authStore.isAdmin,
+    show: authStore.isAdmin || authStore.isSeller,
+  },
+  {
+    title: "Мой магазин",
+    route: "/myShop",
+    icon: mdiStoreCogOutline,
+    show: authStore.isSeller,
   },
   {
     title: "Админ",
@@ -144,13 +150,13 @@ const menu = [
     title: "Заказы",
     route: "/orders",
     icon: mdiInvoiceListOutline,
-    show: true || authStore.isUser,
+    show: authStore.isUser,
   },
   {
     title: "Заявки",
     route: "/requests",
     icon: mdiInvoiceTextClockOutline,
-    show: true || authStore.isSeller,
+    show: authStore.isSeller,
   },
 ];
 

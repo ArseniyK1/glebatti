@@ -2,7 +2,7 @@
   <q-page padding class="stores-page" style="background: #303030; color: white">
     <div class="row q-gutter-sm justify-center">
       <div class="col-12">
-        <product-table @row-click="openProduct" />
+        <dict-product-table @row-click="openProduct" />
       </div>
     </div>
     <left-dialog
@@ -16,10 +16,15 @@
 </template>
 
 <script setup>
-import ProductTable from "components/tables/ProductTable.vue";
+import DictProductTable from "components/tables/DictProductTable.vue";
 import { ref } from "vue";
 import LeftDialog from "components/common/LeftDialog.vue";
 import ProductInfoCard from "components/cards/ProductInfoCard.vue";
+import ShopStorageTable from "components/tables/ShopStorageTable.vue";
+import { useAuthStore } from "stores/auth";
+
+const authStore = useAuthStore();
+
 const dialog = ref(false);
 const oneProductData = ref({});
 

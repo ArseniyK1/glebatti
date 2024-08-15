@@ -18,6 +18,7 @@ const routes = [
       { path: "shops", component: () => import("pages/ShopsPage.vue") },
       { path: "admin-panel", component: () => import("pages/AdminPage.vue") },
       { path: "storage", component: () => import("pages/StoragePage.vue") },
+      { path: "myShop", component: () => import("pages/MyShop.vue") },
       { path: "orders", component: () => import("pages/OrdersPage.vue") },
       { path: "requests", component: () => import("pages/RequestPage.vue") },
     ],
