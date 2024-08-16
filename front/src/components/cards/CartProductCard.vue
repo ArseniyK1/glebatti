@@ -2,17 +2,19 @@
   <q-item class="cart-item q-pa-md bg-info q-ma-sm" style="border-radius: 1rem">
     <q-item-section avatar>
       <q-img
-        :src="`http://localhost:7000/uploads/${product.photo}`"
+        :src="`http://localhost:7000/uploads/${product.product_photo}`"
         class="item-img"
       />
     </q-item-section>
     <q-item-section>
-      <q-item-label class="text-h5 text-white">{{ product.name }}</q-item-label>
+      <q-item-label class="text-h5 text-white">{{
+        product.product_name
+      }}</q-item-label>
       <q-item-label class="text-white text-h6"
         >{{ product.price }} ₽</q-item-label
       >
-      <q-item-label class="text-white text-h6" v-if="product.manufacture?.id"
-        >Производитель: {{ product.manufacture?.name }}</q-item-label
+      <q-item-label class="text-white text-h6" v-if="product.manufacture_name"
+        >Производитель: {{ product.manufacture_name }}</q-item-label
       >
     </q-item-section>
     <q-item-section side class="row items-center">

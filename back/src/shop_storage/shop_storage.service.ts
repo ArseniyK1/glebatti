@@ -77,18 +77,32 @@ export class ShopStorageService {
     const manufactureId = !!query?.manufactureId ? +query?.manufactureId : '';
     const productName = !!query?.productName ? query?.productName : '';
     const shopId = !!query?.shopId ? +query?.shopId : null;
-    let whereCondition = {};
 
     const queryBuilder = this.shopStorageRepository
       .createQueryBuilder('shop_storage')
-      .leftJoinAndSelect('shop_storage.product', 'product')
-      .leftJoinAndSelect('shop_storage.shop', 'shop')
-      .leftJoinAndSelect('product.category', 'category')
-      .leftJoinAndSelect('product.manufacture', 'manufacture')
-      .where(whereCondition)
-      .orderBy('shop_storage.id', 'DESC');
+      .select([
+        'product.id AS id',
+        'product.name AS product_name',
+        'product.photo AS product_photo',
+        'category.name AS category_name',
+        'manufacture.name AS manufacture_name',
+        "json_agg(json_build_object('shopId', shop.id, 'shop_name', shop.name, 'cost_product', shop_storage.cost_product)) AS shops",
+      ])
+      .leftJoin('shop_storage.product', 'product')
+      .leftJoin('product.category', 'category')
+      .leftJoin('product.manufacture', 'manufacture')
+      .leftJoin('shop_storage.shop', 'shop')
+      .groupBy('product.id')
+      .addGroupBy('product.name')
+      .addGroupBy('category.name')
+      .addGroupBy('manufacture.name')
+      .orderBy('product.id', 'DESC');
 
-    if (categoryId || manufactureId || productName || shopId) {
+    if (shopId) {
+      queryBuilder.andWhere('shop.id = :shopId', { shopId: shopId });
+    }
+
+    if (categoryId || manufactureId || productName) {
       queryBuilder.andWhere(
         new Brackets((qb) => {
           if (categoryId) {
@@ -106,15 +120,11 @@ export class ShopStorageService {
               productName: `%${productName}%`,
             });
           }
-          if (shopId) {
-            qb.andWhere('shop.id = :shopId', {
-              shopId: shopId,
-            });
-          }
         }),
       );
     }
-    return await queryBuilder.getMany();
+
+    return await queryBuilder.getRawMany();
   }
 
   async checkQuantityOnStorage(

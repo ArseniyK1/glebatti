@@ -16,6 +16,9 @@
           />
         </div>
       </div>
+      <div v-else-if="loading">
+        <q-spinner color="primary" size="3em" class="q-ma-md" />
+      </div>
       <div v-else class="text-white">Нет товаров(</div>
     </div>
   </q-page>
@@ -45,13 +48,47 @@ const storageStore = useStorageStore();
 const dialog = ref(false);
 const data = ref([]);
 const oneProductData = ref({});
+const loading = ref(false);
 
 const addToCartHandler = (product) => {
-  cartStore.addToCart(product);
-  $q.notify({
-    message: "Товар добавлен в корзину",
-    type: "positive",
-  });
+  console.log(product.shops.length);
+  const items = [];
+  product?.shops?.forEach((el) =>
+    items.push({
+      label: `${el.shop_name} - ${el.cost_product}Р`,
+      value: el.shopId,
+    })
+  );
+  if (product?.shops?.length > 1) {
+    $q.dialog({
+      title: "Выберите магазин",
+      options: {
+        type: "radio",
+        model: items.find((el) => el[0])?.value,
+        items: items,
+      },
+      persistent: true,
+      dark: true,
+      ok: {
+        push: true,
+        color: "primary",
+        label: "Выбрать",
+      },
+      cancel: {
+        push: true,
+        color: "negative",
+        label: "Отмена",
+      },
+    }).onOk((shopId) => {
+      product.shops = [product.shops.find((el) => el.shopId === shopId)];
+      cartStore.addToCart({
+        ...product,
+        price: product.shops[0].cost_product,
+      });
+    });
+  } else {
+    cartStore.addToCart({ ...product, price: product.shops[0].cost_product });
+  }
 };
 
 const openProductInfo = (product) => {
@@ -69,6 +106,7 @@ watch(
 onMounted(async () => {
   // await dictProductStore.list();
   // data.value = dictProductStore.getProducts;
+  loading.value = true;
   await storageStore.catalogueList({
     categoryId: "",
     productName: "",
@@ -76,6 +114,7 @@ onMounted(async () => {
     shopId: "",
   });
   data.value = storageStore.getCatalogueList;
+  loading.value = false;
 });
 </script>
 

@@ -2,8 +2,8 @@
   <q-card class="bg-dark text-white">
     <q-img
       :src="
-        localData?.product?.photo?.length
-          ? `http://localhost:7000/uploads/${localData?.product?.photo}`
+        localData?.product_photo.length
+          ? `http://localhost:7000/uploads/${localData?.product_photo}`
           : '../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg'
       "
       height="320px"
@@ -27,27 +27,40 @@
         @click="$emit('addToCart')"
         @mouseover="hover = true"
         @mouseleave="hover = false"
+        :disable="checkProductInCart"
       >
-        <q-tooltip>{{
-          checkProductInCart ? "Удалить из корзины" : "Добавить в корзину"
+        <q-tooltip v-if="!checkProductInCart">{{
+          "Добавить в корзину"
         }}</q-tooltip>
       </q-btn>
     </q-card-section>
 
     <q-card-section>
       <div class="text-h6">
-        {{ localData?.product?.name }}
+        {{ localData?.product_name }}
       </div>
       <div class="text-subtitle1 text-justify q-mt-sm">
-        Производитель - "{{ localData.product?.manufacture?.name }}"
+        Производитель - "{{ localData.manufacture_name }}"
       </div>
-      <div class="text-subtitle1 text-justify q-mt-sm">
-        Магазин - "{{ localData.shop?.name }}"
+      <div
+        class="text-subtitle1 text-justify q-mt-sm"
+        v-if="localData?.shops?.length <= 1"
+      >
+        В наличии в {{ localData?.shops?.length }} магазинах
+      </div>
+      <div
+        class="text-subtitle1 text-justify q-mt-sm"
+        v-else-if="localData?.shops?.length > 1"
+      >
+        В наличии в {{ localData?.shops?.length }} магазинах
       </div>
     </q-card-section>
     <q-card-section>
       <div class="col-12">
-        <span class="text-h6">{{ localData.cost_product }}₽</span>
+        <span class="text-h6" v-if="localData?.shops?.length <= 1"
+          >{{ localData?.shops[0].cost_product }}₽</span
+        >
+        <span class="text-h6" v-else>Разные цены</span>
         <span class="text-h6 float-right">
           <q-btn
             label="Подробнее"

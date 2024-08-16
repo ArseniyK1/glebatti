@@ -47,7 +47,6 @@
             color="primary"
             class="absolute-bottom-right q-ma-md"
             label="Оформить"
-            @click="checkout"
           />
         </q-card>
       </div>
