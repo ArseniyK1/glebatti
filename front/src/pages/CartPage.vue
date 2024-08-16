@@ -35,7 +35,7 @@
               <div class="col-6">
                 <div class="total-price">
                   <h6>Итоговая стоимость:</h6>
-                  <p>{{ totalSum }} ₽</p>
+                  <p class="text-h3">{{ totalSum }} ₽</p>
                 </div>
               </div>
             </div>
@@ -47,6 +47,7 @@
             color="primary"
             class="absolute-bottom-right q-ma-md"
             label="Оформить"
+            @click="submitOrder"
           />
         </q-card>
       </div>
@@ -63,6 +64,19 @@ const cartStore = useCartStore();
 
 const products = computed(() => cartStore.getProducts);
 const totalSum = computed(() => cartStore.getTotalPrice);
+
+const submitOrder = () => {
+  // cartStore.clearCart();
+  const payload = [];
+  products.value.forEach((el) =>
+    payload.push({
+      productId: el.id,
+      shopId: el.shops[0].shopId,
+      quantity: el.quantity,
+    })
+  );
+  console.log(payload);
+};
 </script>
 
 <style scoped>

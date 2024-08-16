@@ -27,7 +27,6 @@
         @click="$emit('addToCart')"
         @mouseover="hover = true"
         @mouseleave="hover = false"
-        :disable="checkProductInCart"
       >
         <q-tooltip v-if="!checkProductInCart">{{
           "Добавить в корзину"
@@ -46,7 +45,7 @@
         class="text-subtitle1 text-justify q-mt-sm"
         v-if="localData?.shops?.length <= 1"
       >
-        В наличии в {{ localData?.shops?.length }} магазинах
+        В наличии в {{ localData?.shops[0].shop_name }}
       </div>
       <div
         class="text-subtitle1 text-justify q-mt-sm"

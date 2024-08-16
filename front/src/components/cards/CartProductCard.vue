@@ -17,6 +17,7 @@
         >Производитель: {{ product.manufacture_name }}</q-item-label
       >
     </q-item-section>
+    <q-item-section>Магазин: {{ product.shops[0].shop_name }} </q-item-section>
     <q-item-section side class="row items-center">
       <div class="quantity-input">
         <q-btn

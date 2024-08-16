@@ -6,6 +6,7 @@ import { Category } from './category/entities/category.entity';
 import { Manufacture } from './manufacture/entities/manufacture.entity';
 import { DictProduct } from './dict_product/entities/dict_product.entity';
 import { ShopStorage } from './shop_storage/entities/shop_storage.entity';
+import { Order } from './order/entities/order.entity';
 // import { Request } from './request/entities/request.entity';
 // import { Organization } from './organization/entities/organization.entity';
 
@@ -46,6 +47,11 @@ export const providers = [
     provide: 'SHOP_STORAGE_REPOSITORY',
     useFactory: (dataSource: DataSource) =>
       dataSource.getRepository(ShopStorage),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'ORDER_REPOSITORY',
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Order),
     inject: ['DATA_SOURCE'],
   },
   // {

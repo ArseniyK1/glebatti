@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -40,17 +41,26 @@ export class ShopStorageService {
     const existsProductOnStorage = await this.shopStorageRepository.findOne({
       where: { product: { id: dto.productId }, shop: { id: shopId } },
     });
+    console.log(existsProductOnStorage);
+    // if (
+    //   existsProductOnStorage?.id &&
+    //   existsProductOnStorage.cost_product === dto.cost_product
+    // ) {
+    //   await this.shopStorageRepository.update(existsProductOnStorage, {
+    //     quantity: () => `quantity + ${dto.quantity}`,
+    //   });
+    //   return {
+    //     message:
+    //       'Товар с такой ценой уже есть на складе. Его количество увеличилось',
+    //   };
+    // }
     if (
       existsProductOnStorage?.id &&
-      existsProductOnStorage.cost_product === dto.cost_product
+      existsProductOnStorage.cost_product !== dto.cost_product
     ) {
-      await this.shopStorageRepository.update(existsProductOnStorage, {
-        quantity: () => `quantity + ${dto.quantity}`,
-      });
-      return {
-        message:
-          'Товар с такой ценой уже есть на складе. Его количество увеличилось',
-      };
+      throw new ConflictException(
+        'Этот товар с другой ценой уже есть на складе вашего магазина. Вы можете изменить его цену',
+      );
     }
     return await this.shopStorageRepository.save({
       quantity: dto.quantity,
@@ -86,7 +96,7 @@ export class ShopStorageService {
         'product.photo AS product_photo',
         'category.name AS category_name',
         'manufacture.name AS manufacture_name',
-        "json_agg(json_build_object('shopId', shop.id, 'shop_name', shop.name, 'cost_product', shop_storage.cost_product)) AS shops",
+        "json_agg(json_build_object('shopId', shop.id, 'shop_name', shop.name, 'cost_product', shop_storage.cost_product, 'quantity', shop_storage.quantity)) AS shops",
       ])
       .leftJoin('shop_storage.product', 'product')
       .leftJoin('product.category', 'category')
