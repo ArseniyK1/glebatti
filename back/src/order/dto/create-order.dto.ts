@@ -6,7 +6,7 @@ enum Status {
   CANCELED = 'CANCELED',
 }
 
-export class CreateOrderDto {
+export class OnePositionOrderDto {
   @IsNumber()
   @IsNotEmpty()
   shopId: number;
@@ -19,4 +19,9 @@ export class CreateOrderDto {
   @IsNumber()
   @IsNotEmpty()
   quantity: number;
+}
+
+export class CreateOrderDto {
+  @IsNotEmpty()
+  positions: OnePositionOrderDto[];
 }

@@ -17,13 +17,16 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post('create-order')
-  createOrder(@Request() req: any, @Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.createOrder(req.user, createOrderDto);
+  async createOrder(
+    @Request() req: any,
+    @Body() createOrderDto: CreateOrderDto,
+  ) {
+    return await this.orderService.createOrder(req.user, createOrderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.orderService.findAll();
+  @Get('my-order')
+  async myOrder(@Request() req: any) {
+    return await this.orderService.myOrder(req.user.userId);
   }
 
   @Get(':id')

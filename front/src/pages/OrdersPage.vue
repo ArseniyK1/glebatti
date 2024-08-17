@@ -3,8 +3,8 @@
     <product-filters />
     <div class="scroll-container q-mt-md">
       <div class="full-width">
-        <q-list v-for="item in 20" :key="item">
-          <order-item :data="{ id: item }" />
+        <q-list v-for="item in orders" :key="item.order.id">
+          <order-item :data="item" />
         </q-list>
       </div>
     </div>
@@ -14,6 +14,16 @@
 <script setup>
 import OrderItem from "components/cards/OrderItem.vue";
 import ProductFilters from "components/forms/ProductFilters.vue";
+import { computed, onMounted } from "vue";
+import { useOrderStore } from "stores/order";
+
+const orderStore = useOrderStore();
+
+const orders = computed(() => orderStore.getMyOrders);
+
+onMounted(async () => {
+  await orderStore.myOrderList();
+});
 </script>
 
 <style scoped>

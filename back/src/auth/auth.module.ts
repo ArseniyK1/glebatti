@@ -17,7 +17,7 @@ import { DatabaseModule } from '../db/database.module';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1440s' },
+      signOptions: { expiresIn: '19440s' },
     }),
     RolesModule,
     DatabaseModule,

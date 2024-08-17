@@ -45,7 +45,8 @@
         class="text-subtitle1 text-justify q-mt-sm"
         v-if="localData?.shops?.length <= 1"
       >
-        В наличии в {{ localData?.shops[0].shop_name }}
+        В наличии в {{ localData?.shops[0].shop_name }} -
+        {{ localData?.shops[0].quantity }}шт.
       </div>
       <div
         class="text-subtitle1 text-justify q-mt-sm"

@@ -59,23 +59,25 @@
 import { useCartStore } from "stores/cart";
 import { computed, onMounted, ref } from "vue";
 import CartProductCard from "components/cards/CartProductCard.vue";
+import { useOrderStore } from "stores/order";
 
 const cartStore = useCartStore();
+const orderStore = useOrderStore();
 
 const products = computed(() => cartStore.getProducts);
 const totalSum = computed(() => cartStore.getTotalPrice);
 
-const submitOrder = () => {
-  // cartStore.clearCart();
-  const payload = [];
+const submitOrder = async () => {
+  const positions = [];
   products.value.forEach((el) =>
-    payload.push({
+    positions.push({
       productId: el.id,
       shopId: el.shops[0].shopId,
       quantity: el.quantity,
     })
   );
-  console.log(payload);
+  await orderStore.createOrder(positions);
+  cartStore.clearCart();
 };
 </script>
 
