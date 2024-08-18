@@ -36,7 +36,7 @@
 
     <q-card-section>
       <div class="text-h6">
-        {{ localData?.product_name }}
+        {{ localData?.id }}. {{ localData?.product_name }}
       </div>
       <div class="text-subtitle1 text-justify q-mt-sm">
         Производитель - "{{ localData.manufacture_name }}"

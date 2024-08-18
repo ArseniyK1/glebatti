@@ -11,6 +11,7 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Role, Roles } from '../roles/decorators/roles.decorator';
 
 @Controller('order')
 export class OrderController {
@@ -29,18 +30,19 @@ export class OrderController {
     return await this.orderService.myOrder(req.user.userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+  @Roles(Role.seller, Role.admin)
+  @Get('open-orders')
+  async getOpenOrders(@Request() req: any) {
+    return await this.orderService.getOpenOrders(req.user.shopId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+  @Patch('/success-order/:id')
+  update(@Request() req: any, @Param('id') id: string) {
+    return this.orderService.orderSuccess(req.user.userId, +id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+  @Patch('/canceled-order/:id')
+  async canceledOrder(@Param('id') id: string) {
+    return await this.orderService.canceledOrder(+id);
   }
 }

@@ -77,6 +77,7 @@ export class ShopStorageService {
         shop: {
           id: shopId,
         },
+        order: IsNull(),
       },
       relations: { product: { manufacture: true, category: true } },
     });
@@ -102,6 +103,7 @@ export class ShopStorageService {
       .leftJoin('product.category', 'category')
       .leftJoin('product.manufacture', 'manufacture')
       .leftJoin('shop_storage.shop', 'shop')
+      .where('shop_storage.orderId IS NULL')
       .groupBy('product.id')
       .addGroupBy('product.name')
       .addGroupBy('category.name')

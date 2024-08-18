@@ -45,6 +45,13 @@ const productsColumn = [
     sortable: true,
   },
   {
+    name: "quantity",
+    label: "Количество",
+    field: "quantity",
+    align: "left",
+    sortable: true,
+  },
+  {
     name: "model",
     label: "Модель",
     field: "model",

@@ -13,7 +13,7 @@ import { User } from '../../user/entities/user.entity';
 import { DictProduct } from '../../dict_product/entities/dict_product.entity';
 import { ShopStorage } from '../../shop_storage/entities/shop_storage.entity';
 
-enum StatusEnum {
+export enum StatusEnum {
   CREATED = 'CREATED',
   SUCCESS = 'SUCCESS',
   CANCELED = 'CANCELED',

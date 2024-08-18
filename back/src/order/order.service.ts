@@ -7,6 +7,7 @@ import {
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Repository } from 'typeorm';
+import { StatusEnum } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
@@ -79,7 +80,6 @@ export class OrderService {
 
         // Связываем позицию с новым заказом и обновляем её в базе данных
         return this.shopStorageRepository.save({
-          id: position.id,
           quantity: position.quantity,
           cost_product: position.cost_product,
           product: position.product.id,
@@ -101,6 +101,7 @@ export class OrderService {
       where: {
         buyer: { id: userId },
       },
+      relations: { buyer: true, seller: true },
     });
     return await Promise.all(
       orders.map(async (item) => {
@@ -120,11 +121,47 @@ export class OrderService {
     return `This action returns a #${id} order`;
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async getOpenOrders(shopId: number) {
+    const orders = await this.orderRepository.find({
+      where: {
+        shop: { id: shopId },
+      },
+      relations: { buyer: true, seller: true },
+    });
+    return await Promise.all(
+      orders.map(async (item) => {
+        const products = await this.shopStorageRepository.find({
+          where: {
+            order: { id: item.id },
+          },
+          relations: ['product', 'shop'],
+        });
+        console.log(products); // Здесь products будет содержать результаты поиска
+        return { order: item, products };
+      }),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async canceledOrder(id: number) {
+    return await this.orderRepository.update(
+      {
+        id,
+      },
+      {
+        status: StatusEnum.CANCELED,
+      },
+    );
+  }
+
+  async orderSuccess(sellerId: number, orderId: number) {
+    return await this.orderRepository.update(
+      {
+        id: orderId,
+      },
+      {
+        status: StatusEnum.SUCCESS,
+        seller: sellerId,
+      },
+    );
   }
 }

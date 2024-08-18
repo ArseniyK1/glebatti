@@ -171,9 +171,9 @@ const handleBeforeHide = () => {
 //    position: relative;
 //  }
 //
-//  .content {
-//    padding: 16px;
-//  }
+.content {
+  height: 100% !important;
+}
 //
 //  .actions {
 //    width: 100%;

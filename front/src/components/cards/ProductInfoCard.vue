@@ -1,5 +1,5 @@
 <template>
-  <q-card class="bg-dark text-white full-height">
+  <q-card class="text-white full-height" style="background: #303030">
     <q-img
       :src="
         localData?.product_photo?.length
