@@ -2,8 +2,10 @@
   <q-card class="text-white full-height" style="background: #303030">
     <q-img
       :src="
-        localData?.product_photo?.length
-          ? `http://localhost:7000/uploads/${localData?.product_photo}`
+        localData?.product_photo?.length || localData.photo?.length
+          ? `http://localhost:7000/uploads/${
+              localData?.product_photo || localData?.photo
+            }`
           : '../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg'
       "
       height="520px"
@@ -12,13 +14,15 @@
 
     <q-card-section>
       <div class="text-h6">
-        {{ localData?.product_name }}
+        {{ localData?.product_name || localData?.name }}
       </div>
       <div class="text-subtitle1 text-justify q-mt-sm">
-        Производитель - "{{ localData?.manufacture_name }}"
+        Производитель - "{{
+          localData?.manufacture_name || localData?.manufacture.name
+        }}"
       </div>
     </q-card-section>
-    <q-card-section>
+    <q-card-section v-if="localData?.shops">
       В наличии в магазинах:
       <div class="text-justify" v-for="shop in localData?.shops" :key="shop.id">
         {{ shop?.shop_name }} - {{ shop?.cost_product }}р

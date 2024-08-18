@@ -105,7 +105,8 @@ export const useAuthStore = defineStore({
       login,
       password,
       isSeller,
-      email
+      email,
+      shopId
     ) {
       try {
         Loading.show({ message: "Загрузка..." });
@@ -117,6 +118,7 @@ export const useAuthStore = defineStore({
           password,
           isSeller,
           email,
+          shopId,
         });
         localStorage.setItem("user-login", data?.login);
         localStorage.setItem("user-email", data?.email);

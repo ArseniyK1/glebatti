@@ -15,7 +15,9 @@
         <div class="q-mt-sm text-h6">На сумму {{ data.order.order_sum }}Р</div>
         <div
           class="flex column"
-          v-if="authStore.isUser && data.order.seller?.id"
+          v-if="
+            (authStore.isSeller || authStore.isUser) && data.order.seller?.id
+          "
         >
           <div class="text-h6">
             Продавец: {{ data.order.seller.last_name }}
@@ -23,7 +25,10 @@
             {{ data.order.seller.middle_name }}
           </div>
         </div>
-        <div class="flex column col-2" v-if="authStore.isSeller">
+        <div
+          class="flex column col-2"
+          v-if="authStore.isSeller || authStore.isUser"
+        >
           <div class="text-h6">
             Покупатель: {{ data.order.buyer.last_name }}
             {{ data.order.buyer.first_name }}

@@ -58,6 +58,7 @@ export class UserService {
       const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
       const seller = await this.userRepository.save({
         ...createUserDto,
+        shop: createUserDto.shopId,
         roleId: role.id,
         password: hashPassword,
         confirmation_code: verificationCode,
@@ -175,7 +176,7 @@ export class UserService {
   async findOne(id: number) {
     const user = await this.userRepository.findOne({
       where: { id: id },
-      relations: { roleId: true },
+      relations: { roleId: true, shop: true },
     });
     if (!!user) {
       return user;

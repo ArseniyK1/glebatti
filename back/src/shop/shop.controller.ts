@@ -13,6 +13,7 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { Role, Roles } from '../roles/decorators/roles.decorator';
 import { FindAllInShopDto } from './dto/find-all-in-shop.dto';
+import { Public } from '../auth/public.decorator';
 
 @Controller('shop')
 export class ShopController {
@@ -29,6 +30,7 @@ export class ShopController {
     return await this.shopService.findAllProductInShop(+query.shopId);
   }
 
+  @Public()
   @Get('/list')
   async getAllShops() {
     return await this.shopService.getAllShops();

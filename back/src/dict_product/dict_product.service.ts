@@ -25,7 +25,7 @@ export class DictProductService {
     }
 
     return await this.dictProductRepository.save({
-      price: +dto.price,
+      quantity: +dto.quantity,
       category: +dto.categoryId,
       manufacture: +dto.manufactureId,
       ...dto,

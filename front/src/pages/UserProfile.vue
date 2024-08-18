@@ -81,6 +81,19 @@
                   />
                 </q-item-section>
               </q-item>
+              <q-item
+                class="col-lg-6 col-md-6 col-sm-12 col-xs-12"
+                v-if="user_details.shop?.id"
+              >
+                <q-item-section>
+                  <common-input
+                    readonly
+                    dense
+                    v-model="user_details.shop.name"
+                    label="Магазин"
+                  />
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-card-section>
           <!--          <q-card-actions align="right">-->

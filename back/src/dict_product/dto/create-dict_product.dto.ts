@@ -9,9 +9,6 @@ export class CreateDict_productDto {
   model: string;
   @IsString()
   @IsNotEmpty()
-  price: string;
-  @IsString()
-  @IsNotEmpty()
   categoryId: string;
   @IsString()
   @IsNotEmpty()
@@ -19,4 +16,7 @@ export class CreateDict_productDto {
   @IsString()
   @IsOptional()
   photo?: string;
+  @IsString()
+  @IsNotEmpty()
+  quantity?: string;
 }

@@ -59,7 +59,7 @@ export class ShopStorageService {
       existsProductOnStorage.cost_product !== dto.cost_product
     ) {
       throw new ConflictException(
-        'Этот товар с другой ценой уже есть на складе вашего магазина. Вы можете изменить его цену',
+        'Этот товар с другой ценой уже есть на складе вашего магазина. Удалите его и попробуйте ещё раз',
       );
     }
     return await this.shopStorageRepository.save({

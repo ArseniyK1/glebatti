@@ -53,6 +53,15 @@
                 label="Пароль"
                 lazy-rules
               />
+              <common-select
+                v-model="shop"
+                dense
+                rounded
+                label="Выберите магазин"
+                v-if="isRegister && isSeller"
+                :options="shops_list"
+                :option-label="(item) => item.name"
+              />
               <common-input
                 rounded
                 dense
@@ -61,6 +70,7 @@
                 lazy-rules
                 v-if="verifyCodeVisible"
               />
+
               <q-checkbox
                 v-model="isSeller"
                 label="Зарегистрироваться как продавец"
@@ -69,6 +79,7 @@
               <div class="flex justify-between items-center">
                 <q-btn
                   :label="isRegister ? 'Зарегистрироваться' : 'Войти'"
+                  v-if="!verifyCodeVisible"
                   @click="handleSign"
                   type="button"
                   color="accent"
@@ -100,26 +111,32 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "stores/auth";
 import CommonInput from "components/common/CommonInput.vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
+import CommonSelect from "components/common/CommonSelect.vue";
+import { useShopStore } from "stores/shop";
 
 const authStore = useAuthStore();
+const shopStore = useShopStore();
 const quasar = useQuasar();
 const router = useRouter();
 
-const username = ref("test");
-const password = ref("test");
-const email = ref("kiselev-ars02@yandex.ru");
+const username = ref("");
+const password = ref("");
+const email = ref("");
 const isRegister = ref(false);
 const isSeller = ref(false);
 const verifyCode = ref("");
 const verifyCodeVisible = ref(false);
-const first_name = ref("Глеб");
-const last_name = ref("Поленников");
-const middle_name = ref("Александрович");
+const first_name = ref("");
+const last_name = ref("");
+const middle_name = ref("");
+const shop = ref({});
+
+const shops_list = computed(() => shopStore.getShops);
 
 const handleSign = async () => {
   if (isRegister.value) {
@@ -130,7 +147,8 @@ const handleSign = async () => {
       username.value,
       password.value,
       isSeller.value,
-      email.value
+      email.value,
+      shop.value.id
     );
     if (!!localStorage.getItem("user-pass")) verifyCodeVisible.value = true;
   } else {
@@ -142,7 +160,8 @@ const handleVerify = async () => {
   await authStore.verifyCode(verifyCode.value);
 };
 
-onMounted(() => {
+onMounted(async () => {
+  await shopStore.list();
   if (localStorage.getItem("user-token")) {
     quasar.notify({
       timeout: 10000,

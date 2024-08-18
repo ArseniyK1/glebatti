@@ -1,7 +1,6 @@
 <template>
   <q-form @submit="onSubmit" class="row q-gutter-md justify-center">
-    <common-input dense label="Название товара " v-model="name" class="col-6" />
-    <common-input dense label="Цена товара " v-model="price" class="col-5" />
+    <common-input dense label="Название товара " v-model="name" class="col-5" />
     <common-select
       dense
       label="Категория"
@@ -10,12 +9,13 @@
       :options="categoryList"
       :option-label="(item) => item.name"
     />
-    <common-select dense label="Модель" v-model="model" class="col-5" />
+    <common-input dense label="Модель" v-model="model" class="col-5" />
+    <common-input dense label="Количество" v-model="quantity" class="col-6" />
     <common-select
       dense
       label="Производитель"
       v-model="manufacture"
-      class="col-6"
+      class="col-5"
       :options="manufactureList"
       :option-label="(item) => item.name"
     />
@@ -27,7 +27,7 @@
       rounded
       dense
       label-color="dark"
-      class="col-5"
+      class="col-6"
     >
       <template v-slot:prepend>
         <q-icon name="attach_file" />
@@ -62,7 +62,7 @@ const manufactureStore = useManufactureStore();
 const name = ref("");
 const category = ref("");
 const manufacture = ref("");
-const price = ref("");
+const quantity = ref("");
 const model = ref("");
 const productPhoto = ref(null);
 
@@ -72,8 +72,8 @@ const categoryList = computed(() => categoryStore.getCategories);
 const onSubmit = async () => {
   const formData = new FormData();
   formData.append("name", name.value);
-  formData.append("model", "test");
-  formData.append("price", +price.value);
+  formData.append("model", model.value);
+  formData.append("quantity", +quantity.value);
   formData.append("categoryId", +category.value?.id);
   formData.append("manufactureId", +manufacture.value?.id);
   formData.append("photo", productPhoto.value);

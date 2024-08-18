@@ -59,4 +59,8 @@ export class CreateUserDto {
     description: 'Хочет ли пользователь зарегистрироваться как юрист',
   })
   isSeller?: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  shopId?: number;
 }
