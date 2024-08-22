@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { IsNull, Repository } from 'typeorm';
@@ -48,7 +53,10 @@ export class ShopService {
     return `This action updates a #${id} shop`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} shop`;
+  async remove(id: number) {
+    const shop = await this.shopRepository.findOne({ where: { id } });
+
+    if (!shop?.id) throw new NotFoundException('Такого магазина нет');
+    return await this.shopRepository.remove(shop);
   }
 }

@@ -52,6 +52,7 @@ export class ShopController {
     return this.shopService.update(+id, updateShopDto);
   }
 
+  @Roles(Role.admin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.shopService.remove(+id);

@@ -60,6 +60,28 @@ export const useCategoryStore = defineStore({
         Loading.hide();
       }
     },
+    async removeCategory(id) {
+      try {
+        Loading.show({ message: "Загрузка..." });
+        const { data } = await api.delete(`api/category/${id}`);
+        await this.list();
+        Notify.create({
+          message: "Категория удалена",
+          type: "positive",
+          color: "positive",
+        });
+        return data;
+      } catch (e) {
+        Notify.create({
+          message:
+            e?.response?.data?.message ||
+            e?.message ||
+            "Ошибка удаления категории",
+          type: "negative",
+          color: "negative",
+        });
+      }
+    },
   },
 });
 

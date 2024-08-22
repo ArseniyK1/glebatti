@@ -32,6 +32,7 @@
         :class="isActiveRouteCart"
         size="2rem"
         @click="$router.push('/cart')"
+        v-if="authStore.isUser"
       >
         <q-badge color="red" floating rounded>{{ countProducts }}</q-badge>
       </q-icon>

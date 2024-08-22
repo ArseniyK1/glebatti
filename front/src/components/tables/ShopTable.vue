@@ -29,6 +29,16 @@
         </div>
       </common-drop-dawn>
     </template>
+    <template v-slot:body-cell-remove="{ row }">
+      <q-td auto-width>
+        <q-btn
+          color="negative"
+          :icon="mdiMinusBox"
+          dense
+          @click.stop="$emit('remove-product', row.id)"
+        />
+      </q-td>
+    </template>
   </common-table>
 </template>
 
@@ -38,7 +48,8 @@ import { useShopStore } from "stores/shop";
 import CommonTable from "components/common/CommonTable.vue";
 import CommonDropDawn from "components/common/CommonDropDawn.vue";
 import CommonInput from "components/common/CommonInput.vue";
-
+import { mdiMinusBox } from "@mdi/js";
+const emit = defineEmits(["remove-product"]);
 const shopStore = useShopStore();
 
 const shopColumn = [
@@ -67,6 +78,12 @@ const shopColumn = [
     name: "phonenumber",
     label: "Телефон",
     field: "phonenumber",
+    align: "left",
+  },
+  {
+    name: "remove",
+    label: "Удалить",
+    field: "remove",
     align: "left",
   },
 ];

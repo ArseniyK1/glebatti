@@ -17,15 +17,15 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: gleb; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: delete; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE gleb WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Russian_Russia.1251';
+CREATE DATABASE delete WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Russian_Russia.1251';
 
 
-ALTER DATABASE gleb OWNER TO postgres;
+ALTER DATABASE delete OWNER TO postgres;
 
-\connect gleb
+\connect delete
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;

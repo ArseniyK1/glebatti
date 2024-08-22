@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Repository } from 'typeorm';
@@ -10,21 +10,21 @@ import { FindAllCategoryDto } from './dto/find-all-category.dto';
 export class CategoryService {
   constructor(
     @Inject('CATEGORY_REPOSITORY')
-    private shopRepository: Repository<Category>,
+    private categoryRepository: Repository<Category>,
   ) {}
   async create(createCategoryDto: CreateCategoryDto) {
-    return await this.shopRepository.save(createCategoryDto);
+    return await this.categoryRepository.save(createCategoryDto);
   }
 
   async findAll(query: FindAllCategoryDto) {
     if (query.name) {
-      return await this.shopRepository.find({
+      return await this.categoryRepository.find({
         where: {
           name: query.name,
         },
       });
     } else {
-      return await this.shopRepository.find();
+      return await this.categoryRepository.find();
     }
   }
 
@@ -36,7 +36,10 @@ export class CategoryService {
     return `This action updates a #${id} category`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const category = await this.categoryRepository.findOne({ where: { id } });
+
+    if (!category?.id) throw new NotFoundException('Такой категории нет');
+    return await this.categoryRepository.remove(category);
   }
 }

@@ -57,6 +57,28 @@ export const useShopStore = defineStore({
         Loading.hide();
       }
     },
+    async removeShop(id) {
+      try {
+        Loading.show({ message: "Загрузка..." });
+        const { data } = await api.delete(`api/shop/${id}`);
+        await this.list();
+        Notify.create({
+          message: "Магазин удален",
+          type: "positive",
+          color: "positive",
+        });
+        return data;
+      } catch (e) {
+        Notify.create({
+          message:
+            e?.response?.data?.message ||
+            e?.message ||
+            "Ошибка удаления магазина",
+          type: "negative",
+          color: "negative",
+        });
+      }
+    },
   },
 });
 

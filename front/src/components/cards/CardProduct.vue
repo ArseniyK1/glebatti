@@ -27,6 +27,7 @@
         @click="$emit('addToCart')"
         @mouseover="hover = true"
         @mouseleave="hover = false"
+        v-if="authStore.isUser"
       >
         <q-tooltip v-if="!checkProductInCart">{{
           "Добавить в корзину"
@@ -78,6 +79,7 @@
 import { onMounted, ref } from "vue";
 import { mdiCartPlus, mdiCartCheck, mdiCartRemove } from "@mdi/js";
 import { defineProps, defineEmits } from "vue";
+import { useAuthStore } from "stores/auth";
 const props = defineProps({
   data: {
     type: Object,
@@ -88,6 +90,7 @@ const props = defineProps({
     default: false,
   },
 });
+const authStore = useAuthStore();
 const emit = defineEmits(["addToCart", "open"]);
 const localData = ref({ ...props.data });
 const hover = ref(false);
