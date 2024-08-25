@@ -54,12 +54,9 @@ export class ShopStorageService {
     //       'Товар с такой ценой уже есть на складе. Его количество увеличилось',
     //   };
     // }
-    if (
-      existsProductOnStorage?.id &&
-      existsProductOnStorage.cost_product !== dto.cost_product
-    ) {
+    if (existsProductOnStorage?.id) {
       throw new ConflictException(
-        'Этот товар с другой ценой уже есть на складе вашего магазина. Удалите его и попробуйте ещё раз',
+        'Этот товар уже есть на складе вашего магазина. Удалите его и попробуйте ещё раз',
       );
     }
     return await this.shopStorageRepository.save({
