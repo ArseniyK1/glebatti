@@ -71,11 +71,11 @@
                 v-if="verifyCodeVisible"
               />
 
-              <q-checkbox
-                v-model="isSeller"
-                label="Зарегистрироваться как продавец"
-                v-if="isRegister"
-              />
+              <!--              <q-checkbox-->
+              <!--                v-model="isSeller"-->
+              <!--                label="Зарегистрироваться как продавец"-->
+              <!--                v-if="isRegister"-->
+              <!--              />-->
               <div class="flex justify-between items-center">
                 <q-btn
                   :label="isRegister ? 'Зарегистрироваться' : 'Войти'"
@@ -146,7 +146,7 @@ const handleSign = async () => {
       middle_name.value,
       username.value,
       password.value,
-      isSeller.value,
+      false,
       email.value,
       shop.value.id
     );

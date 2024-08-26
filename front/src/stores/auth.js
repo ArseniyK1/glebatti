@@ -136,6 +136,40 @@ export const useAuthStore = defineStore({
         Loading.hide();
       }
     },
+    async signUpSeller(
+      first_name,
+      last_name,
+      middle_name,
+      login,
+      password,
+      email,
+      shopId
+    ) {
+      try {
+        Loading.show({ message: "Загрузка..." });
+        const { data } = await api.post("api/user/signup-seller", {
+          login,
+          first_name,
+          last_name,
+          middle_name,
+          password,
+          email,
+          shopId,
+        });
+        return data;
+      } catch (e) {
+        console.log("catch", e);
+        Notify.create({
+          type: "negative",
+          color: "negative",
+          message:
+            e?.response?.data?.message || e?.message || "Ошибка регистрации",
+        });
+        console.log(e);
+      } finally {
+        Loading.hide();
+      }
+    },
 
     async verifyCode(code) {
       const { data } = await axios.post(

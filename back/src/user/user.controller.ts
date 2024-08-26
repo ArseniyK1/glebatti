@@ -44,6 +44,13 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @Post('signup-seller')
+  @Roles(Role.admin, Role.seller)
+  @ApiOperation({ summary: 'Регистрация продавца' })
+  async createSeller(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.createSeller(createUserDto);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Показать всех пользователей (для админа)' })
   @ApiResponse({ type: [CreateUserDto] })

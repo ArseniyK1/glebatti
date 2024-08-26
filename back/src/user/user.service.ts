@@ -96,6 +96,28 @@ export class UserService {
     }
   }
 
+  async createSeller(createUserDto: CreateUserDto) {
+    const existsUser = await this.userRepository.exists({
+      where: [{ login: createUserDto.login }, { email: createUserDto.email }],
+    });
+    if (!!existsUser)
+      throw new ConflictException(
+        'Продавец с таким логином или почтой уже существует',
+      );
+
+    const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
+    const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
+    const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
+    const seller = await this.userRepository.save({
+      ...createUserDto,
+      shop: createUserDto.shopId,
+      roleId: role.id,
+      password: hashPassword,
+    });
+
+    return seller;
+  }
+
   async updateUserContent(userId: number, dto: UpdateUserDto) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
