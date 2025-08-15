@@ -15,7 +15,10 @@ import { ShopStorageModule } from './shop_storage/shop_storage.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.${process.env.NODE_ENV === 'prod' ? 'env' : 'dev.'}env`,
+    }),
     UserModule,
     RolesModule,
     AuthModule,

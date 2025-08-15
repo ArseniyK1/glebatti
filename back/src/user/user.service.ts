@@ -43,56 +43,61 @@ export class UserService {
     await this.mailService.sendMail(email, subject, text, html);
   }
   async create(createUserDto: CreateUserDto) {
-    const existsUser = await this.userRepository.exists({
-      where: [{ login: createUserDto.login }, { email: createUserDto.email }],
-    });
-    if (!!existsUser)
-      throw new ConflictException(
-        'Пользователь с таким логином или почтой уже существует',
-      );
-
-    const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
-    const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
-    const verificationCode = this.generateVerificationCode();
-    if (!!createUserDto.isSeller) {
-      const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
-      const seller = await this.userRepository.save({
-        ...createUserDto,
-        shop: createUserDto.shopId,
-        roleId: role.id,
-        password: hashPassword,
-        confirmation_code: verificationCode,
+    try {
+      const existsUser = await this.userRepository.exists({
+        where: [{ login: createUserDto.login }, { email: createUserDto.email }],
       });
-      await this.sendRegistrationEmail(
-        seller.email,
-        seller.login,
-        verificationCode,
-      );
-      return seller;
-    } else {
-      const role = await this.roleService.getRoleByValue(roleEnum.USER);
-      const user = await this.userRepository.save({
-        ...createUserDto,
-        roleId: role.id,
-        password: hashPassword,
-        confirmation_code: verificationCode,
-      });
+      if (!!existsUser)
+        throw new ConflictException(
+          'Пользователь с таким логином или почтой уже существует',
+        );
 
-      await this.sendRegistrationEmail(
-        user.email,
-        user.login,
-        verificationCode,
-      );
-      // const payload = {
-      //   userId: user.id,
-      //   username: user.login,
-      //   role: role.value,
-      // };
-      // return {
-      //   access_token: await this.jwtService.signAsync(payload),
-      //   user: user,
-      // };
-      return user;
+      const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
+      const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
+      const verificationCode = this.generateVerificationCode();
+      if (!!createUserDto.isSeller) {
+        const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
+        const seller = await this.userRepository.save({
+          ...createUserDto,
+          shop: createUserDto.shopId,
+          roleId: role.id,
+          password: hashPassword,
+          confirmation_code: verificationCode,
+        });
+        const res = await this.sendRegistrationEmail(
+          seller.email,
+          seller.login,
+          verificationCode,
+        );
+        console.log('res', res);
+        return seller;
+      } else {
+        const role = await this.roleService.getRoleByValue(roleEnum.USER);
+        const user = await this.userRepository.save({
+          ...createUserDto,
+          roleId: role.id,
+          password: hashPassword,
+          confirmation_code: verificationCode,
+        });
+
+        await this.sendRegistrationEmail(
+          user.email,
+          user.login,
+          verificationCode,
+        );
+        // const payload = {
+        //   userId: user.id,
+        //   username: user.login,
+        //   role: role.value,
+        // };
+        // return {
+        //   access_token: await this.jwtService.signAsync(payload),
+        //   user: user,
+        // };
+        return user;
+      }
+    } catch (error) {
+      console.log('error', error);
     }
   }
 
