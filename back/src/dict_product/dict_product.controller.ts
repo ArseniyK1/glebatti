@@ -19,7 +19,7 @@ import { ProductListDto } from './dto/product-list.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import { extname } from 'path';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 
 @Controller('dict_product')
 export class DictProductController {
@@ -28,17 +28,7 @@ export class DictProductController {
   @Post('create')
   @UseInterceptors(
     FileInterceptor('photo', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          callback(
-            null,
-            `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`,
-          );
-        },
-      }),
+      storage: memoryStorage(),
     }),
   )
   @ApiConsumes('multipart/form-data')

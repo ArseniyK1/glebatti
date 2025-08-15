@@ -9,6 +9,7 @@ import { MailService } from '../mail/mail.service';
 import { UserModule } from '../user/user.module';
 import { DictProductService } from '../dict_product/dict_product.service';
 import { ShopService } from '../shop/shop.service';
+import { MinioService } from 'src/minio/minio.service';
 
 @Module({
   imports: [DatabaseModule, UserModule, RolesModule],
@@ -20,6 +21,7 @@ import { ShopService } from '../shop/shop.service';
     MailService,
     DictProductService,
     ShopService,
+    MinioService,
   ],
   exports: [ShopStorageService],
 })

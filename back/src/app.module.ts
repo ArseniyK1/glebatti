@@ -12,10 +12,14 @@ import { ManufactureModule } from './manufacture/manufacture.module';
 import { CategoryModule } from './category/category.module';
 import { MailModule } from './mail/mail.module';
 import { ShopStorageModule } from './shop_storage/shop_storage.module';
+import { MinioModule } from './minio/minio.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.${process.env.NODE_ENV === 'prod' ? 'env' : 'dev.'}env`,
+    }),
     UserModule,
     RolesModule,
     AuthModule,
@@ -26,6 +30,7 @@ import { ShopStorageModule } from './shop_storage/shop_storage.module';
     CategoryModule,
     MailModule,
     ShopStorageModule,
+    MinioModule,
   ],
   providers: [...databaseProviders],
   exports: [...databaseProviders],

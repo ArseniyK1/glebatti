@@ -11,6 +11,7 @@ import { Like, Repository } from 'typeorm';
 import { ShopService } from '../shop/shop.service';
 import { ProductListDto } from './dto/product-list.dto';
 import { DictProduct } from './entities/dict_product.entity';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class DictProductService {
@@ -18,10 +19,23 @@ export class DictProductService {
     @Inject('PRODUCT_REPOSITORY')
     private dictProductRepository: Repository<any>,
     private shopService: ShopService,
+    private minioService: MinioService,
   ) {}
   async create(dto: CreateDict_productDto, photo?: Express.Multer.File) {
+    let photoUrl = null;
+
     if (photo) {
-      dto.photo = photo.filename; // сохраняем имя файла в БД
+      // Генерируем уникальное имя файла
+      const objectName = `products/${Date.now()}-${photo.originalname}`;
+
+      // Загружаем файл в MinIO
+      await this.minioService.uploadFile(photo, objectName);
+
+      // Получаем URL файла
+      photoUrl = await this.minioService.getFileUrl(objectName);
+
+      // Сохраняем URL в БД вместо имени файла
+      dto.photo = photoUrl;
     }
 
     return await this.dictProductRepository.save({
