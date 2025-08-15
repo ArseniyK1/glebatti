@@ -21,26 +21,26 @@
             <q-form class="q-gutter-md">
               <common-input
                 v-model="first_name"
-                label="Имя"
+                :label="`Имя ${isDev ? 'тест' : ''}`"
                 dense
                 v-if="isRegister"
               />
               <common-input
                 v-model="last_name"
-                label="Фамилия"
+                :label="`Фамилия ${isDev ? 'тест' : ''}`"
                 dense
                 v-if="isRegister"
               />
               <common-input
                 v-model="middle_name"
                 dense
-                label="Отчество"
+                :label="`Отчество ${isDev ? 'тест' : ''}`"
                 v-if="isRegister"
               />
               <common-input
                 v-model="email"
                 v-if="isRegister"
-                label="Почта"
+                :label="`Почта ${isDev ? 'тест' : ''}`"
                 dense
                 lazy-rules
               />
@@ -111,29 +111,33 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useAuthStore } from "stores/auth";
 import CommonInput from "components/common/CommonInput.vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import CommonSelect from "components/common/CommonSelect.vue";
 import { useShopStore } from "stores/shop";
+import { faker } from "@faker-js/faker";
 
 const authStore = useAuthStore();
 const shopStore = useShopStore();
 const quasar = useQuasar();
 const router = useRouter();
+const isDev = process.env.DEV;
 
-const username = ref("");
+const isRegister = ref(false);
+const username = ref(
+  isDev && isRegister.value ? faker.internet.username() : ""
+);
 const password = ref("");
 const email = ref("");
-const isRegister = ref(false);
 const isSeller = ref(false);
 const verifyCode = ref("");
 const verifyCodeVisible = ref(false);
-const first_name = ref("");
-const last_name = ref("");
-const middle_name = ref("");
+const first_name = ref(`${isDev ? faker.person.firstName() : ""}`);
+const last_name = ref(`${isDev ? faker.person.lastName() : ""}`);
+const middle_name = ref(`${isDev ? faker.person.middleName() : ""}`);
 const shop = ref({});
 
 const shops_list = computed(() => shopStore.getShops);
@@ -160,9 +164,18 @@ const handleVerify = async () => {
   await authStore.verifyCode(verifyCode.value);
 };
 
+watch(isRegister, () => {
+  if (isRegister.value && isDev) {
+    username.value = faker.internet.username();
+    email.value = "qwertototo2332@gmail.com";
+    password.value = "test";
+  }
+});
+
 onMounted(async () => {
-  await shopStore.list();
+  console.log(process.env);
   if (localStorage.getItem("user-token")) {
+    await shopStore.list();
     quasar.notify({
       timeout: 10000,
       message: "Вы уже авторизованы!",
@@ -185,7 +198,7 @@ onMounted(async () => {
 
 <style>
 .bg-image {
-  //background-image: linear-gradient(135deg, #3d5a80 0%, #ffffff 100%);
+  background-image: linear-gradient(135deg, #3d5a80 0%, #ffffff 100%);
   background: #3d5a80;
 }
 </style>
