@@ -5,6 +5,7 @@ import { providers } from '../constants';
 import { databaseProviders } from '../db/database.providers';
 import { ShopService } from '../shop/shop.service';
 import { DatabaseModule } from '../db/database.module';
+import { MinioService } from 'src/minio/minio.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +15,7 @@ import { DatabaseModule } from '../db/database.module';
     ...providers,
     ...databaseProviders,
     ShopService,
+    MinioService,
   ],
   exports: [DictProductService],
 })

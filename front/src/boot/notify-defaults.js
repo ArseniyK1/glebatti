@@ -2,7 +2,7 @@ import { Notify } from "quasar";
 
 Notify.setDefaults({
   timeout: 3000,
-  position: "bottom",
+  position: "bottom-right",
   textColor: "white",
   type: "positive",
   progress: true,

@@ -1,16 +1,6 @@
 <template>
   <q-card class="text-white full-height" style="background: #303030">
-    <q-img
-      :src="
-        localData?.product_photo?.length || localData.photo?.length
-          ? `http://localhost:7000/uploads/${
-              localData?.product_photo || localData?.photo
-            }`
-          : '../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg'
-      "
-      height="520px"
-    >
-    </q-img>
+    <q-img :src="imgUrl" height="520px"> </q-img>
 
     <q-card-section>
       <div class="text-h6">
@@ -32,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { mdiCartPlus, mdiCartCheck, mdiCartRemove } from "@mdi/js";
 import { defineProps, defineEmits } from "vue";
 const props = defineProps({
@@ -47,6 +37,16 @@ const props = defineProps({
 });
 const emit = defineEmits(["addToCart", "open"]);
 const localData = ref({ ...props.data });
+const imgUrl = computed(() => {
+  if (localData.value.hasOwnProperty("photo")) {
+    return localData.value.photo.includes("http")
+      ? localData.value.photo
+      : `http://localhost:7000/uploads/${localData.value.photo}`;
+  } else if (localData.value.hasOwnProperty("product_photo")) {
+    return `http://localhost:7000/uploads/${localData.value.product_photo}`;
+  }
+  return "";
+});
 </script>
 
 <style scoped></style>

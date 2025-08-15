@@ -2,9 +2,9 @@
   <q-card class="bg-dark text-white">
     <q-img
       :src="
-        localData?.product_photo.length
-          ? `http://localhost:7000/uploads/${localData?.product_photo}`
-          : '../../assets/products/jeroen-den-otter-iKmm0okt6Q4-unsplash.jpg'
+        localData?.product_photo?.includes('http')
+          ? localData?.product_photo
+          : `http://localhost:7000/uploads/${localData?.product_photo}`
       "
       height="320px"
     >
