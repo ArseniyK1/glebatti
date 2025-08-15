@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
@@ -23,16 +28,27 @@ export class MailService {
     },
   });
 
-  async sendMail(to: string, subject: string, text: string, html: string) {
-    const info = await this.transporter.sendMail({
-      from: `"МузШоп" <${cnfg.get<string>('MAIL_NAME')}>`,
-      to,
-      subject,
-      text,
-      html,
-    });
+  async sendMail(
+    to: string,
+    subject: string,
+    text: string,
+    html: string,
+  ): Promise<boolean> {
+    try {
+      const info = await this.transporter.sendMail({
+        from: `"МузШоп" <${cnfg.get<string>('MAIL_NAME')}>`,
+        to,
+        subject,
+        text,
+        html,
+      });
 
-    console.log('Message sent: %s', info.messageId);
+      console.log('Message sent: %s', info.messageId);
+      return true;
+    } catch (error) {
+      console.log('error sendMail:', error);
+      throw new BadRequestException('Произошла ошибка при отправке письма');
+    }
   }
 
   async verificationCode(dto: VerifyCodeDto) {

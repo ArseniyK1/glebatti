@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -36,63 +37,99 @@ export class UserService {
     login: string,
     verificationCode: string,
   ) {
-    const subject = 'Подтверждение почты  ';
-    const text = `Добрый день, ${login}!\n\nСпасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите код ${verificationCode}!\n\nСпасибо,\nКоманда разработчиков`;
-    const html = `<p>Добрый день, ${login}!</p><p>Спасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите следующий код: <h2><strong>${verificationCode}</strong></h2></p><p>С уважением, команда разработчиков.</p>`;
+    try {
+      const subject = 'Подтверждение почты  ';
+      const text = `Добрый день, ${login}!\n\nСпасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите код ${verificationCode}!\n\nСпасибо,\nКоманда разработчиков`;
+      const html = `<p>Добрый день, ${login}!</p><p>Спасибо за регистрацию на нашем сервисе. Чтобы подтвердить почту, пожалуйста, введите следующий код: <h2><strong>${verificationCode}</strong></h2></p><p>С уважением, команда разработчиков.</p>`;
 
-    await this.mailService.sendMail(email, subject, text, html);
+      const okSendMail = await this.mailService.sendMail(
+        email,
+        subject,
+        text,
+        html,
+      );
+      if (!okSendMail) {
+        throw new BadRequestException('Произошла ошибка при отправке письма');
+      }
+      return okSendMail;
+    } catch (error) {
+      console.log('error sendRegistrationEmail:', error);
+      throw new InternalServerErrorException(
+        'Произошла ошибка при отправке письма',
+      );
+    }
   }
   async create(createUserDto: CreateUserDto) {
-    const existsUser = await this.userRepository.exists({
-      where: [{ login: createUserDto.login }, { email: createUserDto.email }],
-    });
-    if (!!existsUser)
-      throw new ConflictException(
-        'Пользователь с таким логином или почтой уже существует',
-      );
-
-    const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
-    const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
-    const verificationCode = this.generateVerificationCode();
-    if (!!createUserDto.isSeller) {
-      const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
-      const seller = await this.userRepository.save({
-        ...createUserDto,
-        shop: createUserDto.shopId,
-        roleId: role.id,
-        password: hashPassword,
-        confirmation_code: verificationCode,
+    try {
+      const existsUser = await this.userRepository.exists({
+        where: [{ login: createUserDto.login }, { email: createUserDto.email }],
       });
-      await this.sendRegistrationEmail(
-        seller.email,
-        seller.login,
-        verificationCode,
-      );
-      return seller;
-    } else {
-      const role = await this.roleService.getRoleByValue(roleEnum.USER);
-      const user = await this.userRepository.save({
-        ...createUserDto,
-        roleId: role.id,
-        password: hashPassword,
-        confirmation_code: verificationCode,
-      });
+      if (!!existsUser)
+        throw new ConflictException(
+          'Пользователь с таким логином или почтой уже существует',
+        );
 
-      await this.sendRegistrationEmail(
-        user.email,
-        user.login,
-        verificationCode,
-      );
-      // const payload = {
-      //   userId: user.id,
-      //   username: user.login,
-      //   role: role.value,
-      // };
-      // return {
-      //   access_token: await this.jwtService.signAsync(payload),
-      //   user: user,
-      // };
-      return user;
+      const salt = await genSalt(10); // С помощью библиотеки bycrypt создаём соль
+      const hashPassword = await hash(createUserDto.password, salt); // bycrypt создаёт хеш пароля
+      const verificationCode = this.generateVerificationCode();
+      if (!!createUserDto.isSeller) {
+        const role = await this.roleService.getRoleByValue(roleEnum.SELLER);
+
+        const okSendMail = await this.sendRegistrationEmail(
+          createUserDto.email,
+          createUserDto.login,
+          verificationCode,
+        );
+
+        if (okSendMail) {
+          const seller = await this.userRepository.save({
+            ...createUserDto,
+            shop: createUserDto.shopId,
+            roleId: role.id,
+            password: hashPassword,
+            confirmation_code: verificationCode,
+          });
+          return seller;
+        } else {
+          throw new BadRequestException(
+            'Не удалось отправить письмо с кодом подтверждения',
+          );
+        }
+      } else {
+        const role = await this.roleService.getRoleByValue(roleEnum.USER);
+
+        const okSendMail = await this.sendRegistrationEmail(
+          createUserDto.email,
+          createUserDto.login,
+          verificationCode,
+        );
+
+        if (okSendMail) {
+          const user = await this.userRepository.save({
+            ...createUserDto,
+            roleId: role.id,
+            password: hashPassword,
+            confirmation_code: verificationCode,
+          });
+          // const payload = {
+          //   userId: user.id,
+          //   username: user.login,
+          //   role: role.value,
+          // };
+          // return {
+          //   access_token: await this.jwtService.signAsync(payload),
+          //   user: user,
+          // };
+          return user;
+        } else {
+          throw new BadRequestException(
+            'Не удалось отправить письмо с кодом подтверждения',
+          );
+        }
+      }
+    } catch (error) {
+      console.log('error', error);
+      throw error;
     }
   }
 

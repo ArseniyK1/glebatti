@@ -11,7 +11,59 @@
         <q-card class="bg-info text-white">
           <q-card-section>
             <div class="text-center q-pt-lg">
-              <div class="col text-h6 ellipsis">Регистрация продавца</div>
+              <div class="col text-h6 ellipsis">Регистрация магазина</div>
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <q-form class="q-gutter-md">
+              <common-input
+                v-model="first_name"
+                label="Название магазина"
+                dense
+              />
+              <common-input
+                v-model="last_name"
+                label="Телефон магазина"
+                dense
+              />
+              <common-input v-model="middle_name" dense label="Адрес" />
+              <!--              <common-input v-model="email" label="Почта" dense lazy-rules />-->
+              <!--              <common-input v-model="username" label="Логин" lazy-rules dense />-->
+              <!--              <common-input-->
+              <!--                type="password"-->
+              <!--                dense-->
+              <!--                rounded-->
+              <!--                v-model="password"-->
+              <!--                label="Пароль"-->
+              <!--                lazy-rules-->
+              <!--              />-->
+              <!--              <common-select-->
+              <!--                v-model="shop"-->
+              <!--                dense-->
+              <!--                rounded-->
+              <!--                label="Выберите магазин"-->
+              <!--                :options="shops_list"-->
+              <!--                :option-label="(item) => item.name"-->
+              <!--              />-->
+              <div class="flex justify-between items-center">
+                <q-btn
+                  label="Зарегистрировать"
+                  @click="signUpSeller"
+                  type="button"
+                  color="accent"
+                />
+              </div>
+            </q-form>
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="col-10">
+        <q-card class="bg-info text-white">
+          <q-card-section>
+            <div class="text-center q-pt-lg">
+              <div class="col text-h6 ellipsis">
+                Регистрация админа магазина
+              </div>
             </div>
           </q-card-section>
           <q-card-section>

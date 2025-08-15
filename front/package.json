@@ -5,13 +5,14 @@
   "productName": "МузШоп",
   "author": "gleb",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
-    "dev": "quasar dev",
+    "start:dev": "quasar dev",
     "build": "quasar build",
-    "build:start": "http-server ./dist/spa/index.html"
+    "build:start": "npx http-server dist/spa -p 8080 --mimetypes mime.types.json -c-1"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
@@ -24,7 +25,8 @@
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
-    "@quasar/app-vite": "^1.3.0",
+    "@faker-js/faker": "^9.9.0",
+    "@quasar/app-vite": "^2.3.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
