@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start:dev",
+      "path": "front",
+      "problemMatcher": [],
+      "label": "FRONT",
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "browser"
+      }
+    },
+    {
+      "type": "npm",
+      "script": "start:dev",
+      "path": "back",
+      "problemMatcher": [],
+      "label": "BACK",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "server"
+      }
+    },
+    {
+      "label": "RUN FRONT AND BACK",
+      "dependsOn": ["FRONT", "BACK"],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "play"
+      }
+    }
+  ]
+}
